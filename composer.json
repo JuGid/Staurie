@@ -1,0 +1,23 @@
+{
+    "name": "jugid/staurie",
+    "description": "Create your own story",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Jugid\\Staurie\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jugid",
+            "email": "gidjulien@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/finder": "^6.0"
+    }
+}
