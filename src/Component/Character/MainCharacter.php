@@ -75,8 +75,26 @@ abstract class MainCharacter extends AbstractComponent {
     private function speak(string $npc_name) {
         $pp = $this->container->getPrettyPrinter();
         $npc = $this->container->getMap()->getCurrentBlueprint()->getNpc($npc_name);
+
+        if(null !== $npc) {
+            $dialog = $npc->speak();
+            if(is_array($dialog)) {
+                foreach($dialog as $dial) {
+                    $this->printNpcDialog($npc_name, $dial);
+                }
+                return;
+            } 
+            
+            $this->printNpcDialog($npc_name, $dialog);
+        } else {
+            $pp->writeLn('You are probably talking to a ghost', 'red');
+        }
+    }
+
+    private function printNpcDialog(string $npc_name, string $dial) {
+        $pp = $this->container->getPrettyPrinter();
         $pp->write($npc_name . ' : ', 'green');
-        $pp->writeScroll($npc->speak(), 20);
+        $pp->writeScroll($dial, 20);
     }
 
     final public function defaultConfig() : array {

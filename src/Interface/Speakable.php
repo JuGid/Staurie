@@ -3,5 +3,5 @@
 namespace Jugid\Staurie\Interface;
 
 interface Speakable {
-    public function speak() : string;
+    public function speak() : string|array;
 }

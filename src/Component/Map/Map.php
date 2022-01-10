@@ -66,6 +66,7 @@ class Map extends AbstractComponent {
             throw new LogicException('No map at position '. $this->current_position . '. You should think about creating one.');
         }
 
+        $pp->writeUnder('Map view', 'green');
         $description = str_split($current_blueprint->description(), self::CHAR_PER_LINE);
         $description_rows = [];
         foreach($description as $desc) {

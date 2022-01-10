@@ -14,9 +14,9 @@ class Cain extends Npc {
         return 'A stranger with a pretty face';
     }
 
-    public function speak() : string {
+    public function speak() : string|array {
         if($this->playerHasItem('Sword')) {
-            return 'Please, do not hurt me !';
+            return ['Please, do not hurt me !', 'I\'m famous here, I can help you !'];
         } else {
             return 'Speak me i\'m famous';
         }
