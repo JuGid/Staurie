@@ -61,37 +61,37 @@ class PrettyPrinter extends AbstractComponent {
     /**
      * Use it to write a simple line
      * <code>
-     * TWConsole::write('Hello world');
+     * $this->write('Hello world');
      * 
      * Output :
      * <code>
      * Hello world
      * </code>
      */
-    public static function write(string $str, $foreground_color = null, $background_color = null) : void
+    public function write(string $str, $foreground_color = null, $background_color = null) : void
     {
-        echo sprintf('%s', self::colored($str, $foreground_color, $background_color));
+        echo sprintf('%s', $this->colored($str, $foreground_color, $background_color));
     }
 
     /**
      * Use it to write a simple line with an escape character
      * <code>
-     * TWConsole::writeLn('Hello world');
+     * $this->writeLn('Hello world');
      * </code>
      * Output :
      * <code>
      * Hello world(\n)
      * </code>
      */
-    public static function writeLn(string $str, $foreground_color = null, $background_color = null) : void
+    public function writeLn(string $str, $foreground_color = null, $background_color = null) : void
     {
-        echo sprintf("%s\n", self::colored($str, $foreground_color, $background_color));
+        echo sprintf("%s\n", $this->colored($str, $foreground_color, $background_color));
     }
 
     /**
      * Use it to write a line which is underlined
      * <code>
-     * TWConsole::writeUnder('Hello world');
+     *  $this->writeUnder('Hello world');
      * </code>
      * 
      * Output :
@@ -100,16 +100,16 @@ class PrettyPrinter extends AbstractComponent {
      * -----------(\n)
      * </code>
      */
-    public static function writeUnder(string $str, $foreground_color = null, $background_color = null) : void 
+    public function writeUnder(string $str, $foreground_color = null, $background_color = null) : void 
     {
-        self::write($str, $foreground_color, $background_color);
-        self::writeSeparator('-', strlen($str));
+        $this->write($str, $foreground_color, $background_color);
+        $this->writeSeparator('-', strlen($str));
     }
 
     /**
      * Use it to write a line that represents a separator
      * <code>
-     * TWConsole::writeSeparator('-', 30);
+     * $this->writeSeparator('-', 30);
      * </code>
      * 
      * Output :
@@ -117,23 +117,45 @@ class PrettyPrinter extends AbstractComponent {
      * (\n)------------------------------(\n)
      * </code>
      */
-    public static function writeSeparator(string $separator = '-', int $size = 60) 
+    public function writeSeparator(string $separator = '-', int $size = 60) 
     {
-        self::writeLn("\n".str_repeat($separator, $size));
+        $this->writeLn("\n".str_repeat($separator, $size));
     }
 
-    public static function writeScroll(string $str, int $time_milliseconds = 5) {
+    /**
+     * Use it to write a line with a sleep between each characters
+     */
+    public function writeScroll(string $str, int $time_milliseconds = 5) {
         for($i = 0; $i < strlen($str); $i++) {
-            self::write($str[$i]);
+            $this->write($str[$i]);
             usleep($time_milliseconds * 1000);
         }
-        self::writeln("");
+        $this->writeln("");
+    }
+
+    public function writeProgressbar(int $value, int $min = 0, int $max = 100, string $label = '',string $barAppareance = '=', int $nbBars = 10) {
+        if($value > $max) {
+            $value = $max;
+        }
+
+        $valuePerCent = round($value*100/$max, 2);
+        $valuePerBar = round($max/$nbBars, 0, PHP_ROUND_HALF_UP);
+        $nbBars = round($value/$valuePerBar, 0, PHP_ROUND_HALF_UP);
+        $nbSpaces = 10 - $nbBars;
+
+        $progressBar = sprintf('[%s%s] %.2f%% (%d/%d)', str_repeat($barAppareance, $nbBars), str_repeat(' ', $nbSpaces), $valuePerCent, $value, $max);
+
+        if(!empty($label)) {
+            $progressBar = $label . ' : ' . $progressBar;
+        }
+
+        $this->writeLn($progressBar);
     }
 
     /**
      * Use it to write a table
      * <code>
-     * TWConsole::writeTable($header, $lines);
+     * $this->writeTable($header, $lines);
      * </code>
      * 
      * Output :
@@ -164,26 +186,26 @@ class PrettyPrinter extends AbstractComponent {
      * 
      */
 
-    public static function writeTable(array $header, array $lines, bool $with_separator = false)
+    public function writeTable(array $header, array $lines, bool $with_separator = false)
     {
         if(count($lines) == 0) {
             throw new InvalidArgumentException('The lines are empty');
         }
 
-        $columnsLength = self::getMaxColumnsLengthForArray($header, $lines);
-        self::printArraySeparator($columnsLength);
-        self::printArrayLine($header, $columnsLength, true);
+        $columnsLength = $this->getMaxColumnsLengthForArray($header, $lines);
+        $this->printArraySeparator($columnsLength);
+        $this->printArrayLine($header, $columnsLength, true);
        
         foreach($lines as $line) {
-            self::printArrayLine($line, $columnsLength, $with_separator);
+            $this->printArrayLine($line, $columnsLength, $with_separator);
         }
 
         if(!$with_separator) {
-            self::printArraySeparator($columnsLength);
+            $this->printArraySeparator($columnsLength);
         }
     }
 
-    private static function printArrayLine(array $array, array $columns_length, bool $with_separator = false) : void 
+    private function printArrayLine(array $array, array $columns_length, bool $with_separator = false) : void 
     {
         $cell_format = '| %s ';
         $end_line = '|';
@@ -196,14 +218,14 @@ class PrettyPrinter extends AbstractComponent {
         }
         $line_print.=$end_line;
 
-        self::writeln($line_print);
+        $this->writeln($line_print);
 
         if($with_separator) {
-            self::printArraySeparator($columns_length);
+            $this->printArraySeparator($columns_length);
         }
     }
 
-    private static function printArraySeparator(array $columns_length) 
+    private function printArraySeparator(array $columns_length) 
     {
         $separator_print = '+%s';
         $separator = '';
@@ -213,13 +235,13 @@ class PrettyPrinter extends AbstractComponent {
         }
         $separator .= sprintf($separator_print, '');
 
-        self::writeln($separator);
+        $this->writeln($separator);
     }
 
-    private static function getMaxColumnsLengthForArray(array $header, array $content)
+    private function getMaxColumnsLengthForArray(array $header, array $content)
     {
-        $maxHeader = self::getColumnsLength($header);
-        $contentMax = self::getLinesColumnsLength($content);
+        $maxHeader = $this->getColumnsLength($header);
+        $contentMax = $this->getLinesColumnsLength($content);
         $numberOfColumns = count($maxHeader);
         $maxColumns = [];
 
@@ -243,23 +265,23 @@ class PrettyPrinter extends AbstractComponent {
         
     }
 
-    private static function getColumnsLength(array $array) : array 
+    private function getColumnsLength(array $array) : array 
     {
         return array_values(array_combine($array, array_map('strlen', $array)));     
     }
 
-    private static function getLinesColumnsLength(array $lines) : array 
+    private function getLinesColumnsLength(array $lines) : array 
     {
         $columns_length = [];
         foreach($lines as $line) 
         {
-            $columns_length[] = self::getColumnsLength($line);
+            $columns_length[] = $this->getColumnsLength($line);
         }
 
         return $columns_length;
     }
 
-    private static function colored($string, $foreground_color = null, $background_color = null) : string
+    private function colored($string, $foreground_color = null, $background_color = null) : string
     {
         $colored_string = "";
 

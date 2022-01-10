@@ -27,7 +27,9 @@ class Save extends AbstractComponent {
     }
 
     public function defaultConfig() : array {
-        return [];
+        return [
+            'directory'=>__DIR__.'/../../../../saves/'
+        ];
     }
 
     protected function action(string $event, array $arguments) : void {

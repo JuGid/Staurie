@@ -54,13 +54,22 @@ abstract class MainCharacter extends AbstractComponent {
 
     private function me() {
         $pp = $this->container->getPrettyPrinter();
+        $pp->writeUnder('Details', 'green');
         $pp->writeLn('Name : ' . $this->config['name']);
+
+        $this->printLevel();
+
+        $pp->writeUnder("\nYour statistics", 'green');
         $header = ['Attribute', 'Value'];
         $line = [];
         foreach($this->statistics as $name=>$value) {
             $line[] = [ucfirst($name), $value];
         }
         $pp->writeTable($header, $line);
+    }
+
+    private function printLevel() : void {
+        $this->container->dispatcher()->dispatch('level.ask');
     }
 
     private function speak(string $npc_name) {
