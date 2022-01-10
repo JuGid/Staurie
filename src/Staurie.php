@@ -31,6 +31,12 @@ class Staurie {
         return $this->container;
     }
 
+    public function register(array $component_classes) {
+        foreach($component_classes as $component_class) {
+            $this->container->registerComponent($component_class);
+        }
+    }
+
     private function initialize() {
         $components = $this->container->gets(Container::CONTAINER_COMPONENTS);
 

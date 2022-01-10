@@ -11,14 +11,11 @@ use Jugid\Staurie\Tests\Player;
 require_once __DIR__.'/../../vendor/autoload.php';
 
 $staurie = new Staurie();
+$staurie->register([
+    Console::class, Player::class, Save::class, PrettyPrinter::class, Inventory::class
+]);
 
-$console = $staurie->getContainer()->registerComponent(Console::class);
-$character = $staurie->getContainer()->registerComponent(Player::class);
-$save = $staurie->getContainer()->registerComponent(Save::class);
 $map = $staurie->getContainer()->registerComponent(Map::class);
-$prettyprinter = $staurie->getContainer()->registerComponent(PrettyPrinter::class);
-$inventory = $staurie->getContainer()->registerComponent(Inventory::class);
-
 $map->config([
     'directory'=>__DIR__.'/maps',
     'namespace'=>'Jugid\Staurie\Tests\Maps'
