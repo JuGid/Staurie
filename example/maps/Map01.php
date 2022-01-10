@@ -1,11 +1,11 @@
 <?php
 
-namespace Jugid\Staurie\Tests\Maps;
+namespace Jugid\Staurie\Example\Maps;
 
 use Jugid\Staurie\Component\Map\Blueprint;
 use Jugid\Staurie\Game\Position;
-use Jugid\Staurie\Tests\Npcs\Cain;
-use Jugid\Staurie\Tests\Items\Sword;
+use Jugid\Staurie\Example\Npcs\Cain;
+use Jugid\Staurie\Example\Items\Sword;
 
 class Map01 extends Blueprint {
 

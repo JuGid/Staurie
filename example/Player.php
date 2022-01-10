@@ -1,6 +1,6 @@
 <?php
 
-namespace Jugid\Staurie\Tests;
+namespace Jugid\Staurie\Example;
 
 use Jugid\Staurie\Component\Character\MainCharacter;
 

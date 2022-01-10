@@ -13,6 +13,7 @@ use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 class Map extends AbstractComponent {
 
     private const CONTAINER_BLUEPRINT = 'blueprint';
+    private const CHAR_PER_LINE = 100;
 
     private Position $current_position;
 
@@ -65,9 +66,15 @@ class Map extends AbstractComponent {
             throw new LogicException('No map at position '. $this->current_position . '. You should think about creating one.');
         }
 
+        $description = str_split($current_blueprint->description(), self::CHAR_PER_LINE);
+        $description_rows = [];
+        foreach($description as $desc) {
+            $description_rows[] = [$desc];
+        }
+
         $pp->writeTable(
             [$current_blueprint->name() . ' ' . $this->current_position],
-            [[$current_blueprint->description()]]
+            $description_rows
         );
 
         $npcs = [];

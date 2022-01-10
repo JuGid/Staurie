@@ -1,6 +1,6 @@
 <?php
 
-namespace Jugid\Staurie\Tests\Items;
+namespace Jugid\Staurie\Example\Items;
 
 use Jugid\Staurie\Game\Item;
 

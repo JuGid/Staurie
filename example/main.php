@@ -6,9 +6,9 @@ use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Component\Save\Save;
 use Jugid\Staurie\Staurie;
-use Jugid\Staurie\Tests\Player;
+use Jugid\Staurie\Example\Player;
 
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 $staurie = new Staurie();
 $staurie->register([
@@ -18,7 +18,7 @@ $staurie->register([
 $map = $staurie->getContainer()->registerComponent(Map::class);
 $map->config([
     'directory'=>__DIR__.'/maps',
-    'namespace'=>'Jugid\Staurie\Tests\Maps'
+    'namespace'=>'Jugid\Staurie\Example\Maps'
 ]);
 
 $staurie->devmode();

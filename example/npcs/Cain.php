@@ -1,6 +1,6 @@
 <?php
 
-namespace Jugid\Staurie\Tests\Npcs;
+namespace Jugid\Staurie\Example\Npcs;
 
 use Jugid\Staurie\Game\Npc;
 
