@@ -1,6 +1,6 @@
 <?php
 
-namespace Jugid\Staurie\Game;
+namespace Jugid\Staurie;
 
 class GameState {
     

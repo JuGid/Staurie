@@ -9,7 +9,7 @@ use Jugid\Staurie\Component\Console\Console;
 use Jugid\Staurie\Component\Inventory\Inventory;
 use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
-use Jugid\Staurie\Game\GameState;
+use Jugid\Staurie\GameState;
 use Jugid\Staurie\Interface\Containerable;
 use Jugid\Staurie\Interface\ContainerInterface;
 
