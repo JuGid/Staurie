@@ -4,6 +4,7 @@ namespace Jugid\Staurie\Component\Character;
 
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Character\CoreFunctions\MainCharacterFunction;
+use Jugid\Staurie\Component\Character\CoreFunctions\SpeakFunction;
 use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 
@@ -33,13 +34,17 @@ abstract class MainCharacter extends AbstractComponent {
         $console = $this->container->getConsole();
         $console->addFunction(new MainCharacterFunction());
 
+        if($this->container->isComponentRegistered(Map::class)) {
+            $console->addFunction(new SpeakFunction());
+        }
+
         $this->statistics = $this->config['statistics'];
     }
 
     final protected function action(string $event, array $arguments) : void {
+        $pp = $this->container->getPrettyPrinter();
         switch($event) {
             case 'character.me':
-                $pp = $this->container->getPrettyPrinter();
                 $pp->writeLn('Name : ' . $this->config['name']);
                 $header = ['Attribute', 'Value'];
                 $line = [];
@@ -49,6 +54,7 @@ abstract class MainCharacter extends AbstractComponent {
                 $pp->writeTable($header, $line);
                 break;
             case 'character.speak':
+                $pp->writeLn('Speak to ' . $arguments['to']);
                 break;
             case 'character.take':
                 break;

@@ -8,7 +8,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Jugid\\Staurie\\": "src/"
+            "Jugid\\Staurie\\": "src/",
+            "Jugid\\Staurie\\Example\\": "example/"
         }
     },
     "authors": [
