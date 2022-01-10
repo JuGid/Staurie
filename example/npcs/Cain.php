@@ -14,11 +14,11 @@ class Cain extends Npc {
         return 'A stranger with a pretty face';
     }
 
-    public function speak() : void {
+    public function speak() : string {
         if($this->playerHasItem('Sword')) {
-            echo 'Please, do not hurt me !', "\n";
+            return 'Please, do not hurt me !';
         } else {
-            echo 'Speak me i\'m famous', "\n";
+            return 'Speak me i\'m famous';
         }
         
     }

@@ -20,7 +20,7 @@ abstract class MainCharacter extends AbstractComponent {
         $events = ['character.me'];
 
         if($this->container->isComponentRegistered(Map::class)) {
-            array_push($events, 'character.speak', 'character.take', 'character.use', 'character.drop');
+            array_push($events, 'character.speak');
         }
 
         return $events;
@@ -49,12 +49,6 @@ abstract class MainCharacter extends AbstractComponent {
             case 'character.speak':
                 $this->speak($arguments['to']);
                 break;
-            case 'character.take':
-                break;
-            case 'character.use':
-                break;
-            case 'character.drop':
-                break;
         }
     }
 
@@ -73,7 +67,7 @@ abstract class MainCharacter extends AbstractComponent {
         $pp = $this->container->getPrettyPrinter();
         $npc = $this->container->getMap()->getCurrentBlueprint()->getNpc($npc_name);
         $pp->write($npc_name . ' : ', 'green');
-        $npc->speak();
+        $pp->writeScroll($npc->speak(), 20);
     }
 
     final public function defaultConfig() : array {

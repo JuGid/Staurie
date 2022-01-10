@@ -122,6 +122,14 @@ class PrettyPrinter extends AbstractComponent {
         self::writeLn("\n".str_repeat($separator, $size));
     }
 
+    public static function writeScroll(string $str, int $time_milliseconds = 5) {
+        for($i = 0; $i < strlen($str); $i++) {
+            self::write($str[$i]);
+            usleep($time_milliseconds * 1000);
+        }
+        self::writeln("");
+    }
+
     /**
      * Use it to write a table
      * <code>
