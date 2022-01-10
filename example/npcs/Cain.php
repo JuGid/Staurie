@@ -15,6 +15,11 @@ class Cain extends Npc {
     }
 
     public function speak() : void {
-        echo 'Speak me i\'m famous', "\n";
+        if($this->playerHasItem('Sword')) {
+            echo 'Please, do not hurt me !', "\n";
+        } else {
+            echo 'Speak me i\'m famous', "\n";
+        }
+        
     }
 }

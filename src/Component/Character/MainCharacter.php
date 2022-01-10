@@ -42,19 +42,12 @@ abstract class MainCharacter extends AbstractComponent {
     }
 
     final protected function action(string $event, array $arguments) : void {
-        $pp = $this->container->getPrettyPrinter();
         switch($event) {
             case 'character.me':
-                $pp->writeLn('Name : ' . $this->config['name']);
-                $header = ['Attribute', 'Value'];
-                $line = [];
-                foreach($this->statistics as $name=>$value) {
-                    $line[] = [ucfirst($name), $value];
-                }
-                $pp->writeTable($header, $line);
+                $this->me();
                 break;
             case 'character.speak':
-                $pp->writeLn('Speak to ' . $arguments['to']);
+                $this->speak($arguments['to']);
                 break;
             case 'character.take':
                 break;
@@ -63,6 +56,24 @@ abstract class MainCharacter extends AbstractComponent {
             case 'character.drop':
                 break;
         }
+    }
+
+    private function me() {
+        $pp = $this->container->getPrettyPrinter();
+        $pp->writeLn('Name : ' . $this->config['name']);
+        $header = ['Attribute', 'Value'];
+        $line = [];
+        foreach($this->statistics as $name=>$value) {
+            $line[] = [ucfirst($name), $value];
+        }
+        $pp->writeTable($header, $line);
+    }
+
+    private function speak(string $npc_name) {
+        $pp = $this->container->getPrettyPrinter();
+        $npc = $this->container->getMap()->getCurrentBlueprint()->getNpc($npc_name);
+        $pp->write($npc_name . ' : ', 'green');
+        $npc->speak();
     }
 
     final public function defaultConfig() : array {

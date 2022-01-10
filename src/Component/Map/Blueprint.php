@@ -4,6 +4,7 @@ namespace Jugid\Staurie\Component\Map;
 
 use Jugid\Staurie\Container;
 use Jugid\Staurie\Game\Item;
+use Jugid\Staurie\Game\Npc;
 use Jugid\Staurie\Interface\Containerable;
 use Jugid\Staurie\Interface\Describable;
 use Jugid\Staurie\Interface\Initializable;
@@ -38,7 +39,19 @@ abstract class Blueprint implements Containerable, Initializable, Describable, P
         }
     }
 
-    public function takeItem(string $item_name) {
+    public function getNpc(string $npc_name) : ?Npc{
+        if(!$this->hasNpc($npc_name)) {
+            return null;
+        }
+
+        return $this->npcs[$npc_name];
+    }
+
+    private function hasNpc(string $npc_name) : bool {
+        return isset($this->npcs[$npc_name]);
+    }
+
+    public function takeItem(string $item_name) : ?Item{
         if(!$this->hasItem($item_name)) {
             return null;
         }
