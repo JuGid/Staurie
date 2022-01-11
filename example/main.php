@@ -17,10 +17,7 @@ $staurie->register([
 ]);
 
 $map = $staurie->getContainer()->registerComponent(Map::class);
-$map->config([
-    'directory'=>__DIR__.'/maps',
-    'namespace'=>'Jugid\Staurie\Example\Maps'
-]);
+$map->config(['directory'=>__DIR__.'/maps','namespace'=>'Jugid\Staurie\Example\Maps', 'navigation'=>false]);
 
 $staurie->devmode();
 $staurie->run();

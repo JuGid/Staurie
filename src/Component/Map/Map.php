@@ -22,12 +22,7 @@ class Map extends AbstractComponent {
     }
 
     final public function getEventName() : array {
-        $events = ['map.view'];
-        
-        if($this->config['navigation']) {
-            $events[] = 'map.move';
-        }
-
+        $events = ['map.view', 'map.move'];
         return $events;
     }
 
@@ -37,9 +32,12 @@ class Map extends AbstractComponent {
     
     final public function initialize() : void {
         $console = $this->container->getConsole();
-        $console->addFunction(new MoveFunction());
         $console->addFunction(new ViewFunction());
 
+        if($this->config['navigation']) {
+            $console->addFunction(new MoveFunction());
+        }
+        
         $this->initializeBlueprintsFromFiles();
         $this->current_position = new Position($this->config['x_start'],$this->config['y_start']);
         
@@ -106,7 +104,7 @@ class Map extends AbstractComponent {
     }
 
     private function move(string $direction) : void {
-        $prettyprinter = $this->container->getPrettyPrinter();
+        $pp = $this->container->getPrettyPrinter();
         $previousPosition = clone $this->current_position;
         switch($direction) {
             case 'north':
@@ -124,12 +122,9 @@ class Map extends AbstractComponent {
         }
 
         if(null === $this->getBlueprint($this->current_position)) {
-            $prettyprinter->writeLn('Something prevents you to go to the '.$direction, null, 'red');
+            $pp->writeLn('Something prevents you to go to the '.$direction, null, 'red');
             $this->current_position = $previousPosition;
-        } else {
-            $this->view();
-        }
-
+        } 
     }
 
     final public function getCurrentBlueprint() : Blueprint {

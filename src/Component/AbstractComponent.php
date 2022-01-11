@@ -49,14 +49,7 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
 
     final public function config(array $config) : void {
         $default = $this->defaultConfig();
-
-        foreach($default as $name=>$value) {
-            if(!isset($config[$name])) {
-                $this->config[$name] = $value;
-            } else {
-                $this->config[$name] = $config[$name];
-            }
-        }
+        $this->config = array_merge($default, $config);
     }
 
     abstract public function getEventName() : array;
