@@ -20,6 +20,8 @@ class Staurie {
     public function run() : void {
         $this->initialize();
 
+        $this->container->dispatcher()->dispatch('introduction.show');
+        
         while($this->container->state()->isRunning()) {
             $this->container->dispatcher()->dispatch('console.console');
         }

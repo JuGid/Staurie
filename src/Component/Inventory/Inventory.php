@@ -5,7 +5,9 @@ namespace Jugid\Staurie\Component\Inventory;
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Character\MainCharacter;
 use Jugid\Staurie\Component\Console\Console;
+use Jugid\Staurie\Component\Inventory\CoreFunctions\DropFunction;
 use Jugid\Staurie\Component\Inventory\CoreFunctions\InventoryFunction;
+use Jugid\Staurie\Component\Inventory\CoreFunctions\TakeFunction;
 use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Game\Item;
@@ -27,8 +29,14 @@ class Inventory extends AbstractComponent {
     }
 
     final public function initialize() : void {
-        $this->container->getConsole()->addFunction(new InventoryFunction());
+        $console = $this->container->getConsole();
+        $console->addFunction(new InventoryFunction());
 
+        if($this->container->isComponentRegistered(Map::class)) {
+            $console->addFunction(new DropFunction());
+            $console->addFunction(new TakeFunction());
+        }
+        
         $this->size = $this->config['inventory_size'];
     }
 

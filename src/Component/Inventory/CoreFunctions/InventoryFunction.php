@@ -3,7 +3,6 @@
 namespace Jugid\Staurie\Component\Inventory\CoreFunctions;
 
 use Jugid\Staurie\Component\Console\AbstractConsoleFunction;
-use Jugid\Staurie\Component\Map\Map;
 
 class InventoryFunction extends AbstractConsoleFunction {
 
@@ -15,12 +14,6 @@ class InventoryFunction extends AbstractConsoleFunction {
             case 'size':
                 $this->getContainer()->dispatcher()->dispatch('inventory.size');
                 break;
-            case 'take':
-                $this->getContainer()->dispatcher()->dispatch('inventory.take', ['item_name'=>$args[1]]);
-                break;
-            case 'drop':
-                $this->getContainer()->dispatcher()->dispatch('inventory.drop', ['item_name'=>$args[1]]);
-                break;
         }        
     }
 
@@ -29,16 +22,10 @@ class InventoryFunction extends AbstractConsoleFunction {
     }
 
     public function description() : string {
-        return 'Inventory function';
+        return 'Inventory functions';
     }
 
     public function getArgs() : int|array {
-        $args = ['view','size'];
-
-        if($this->getContainer()->isComponentRegistered(Map::class)) {
-            array_push($args, 'take', 'drop');
-        }
-
-        return $args;
+        return ['view','size'];
     }
 }

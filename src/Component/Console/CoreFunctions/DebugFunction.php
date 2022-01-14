@@ -10,7 +10,7 @@ class DebugFunction extends AbstractConsoleFunction {
     private const CONTAINER_TYPE = 'container';
     private const COMPONENT_TYPE = 'component';
     private const EVENTS_TYPE = 'events';
-
+    
     public function action(array $args) : void {
         $type = $args[0];
         $element = $args[1];
@@ -26,8 +26,11 @@ class DebugFunction extends AbstractConsoleFunction {
                 case self::EVENTS_TYPE:
                     if($element === 'show') {
                         var_dump($this->getContainer()->dispatcher()->getRegisteredEvents());
-                    } else {
-                        var_dump($this->getContainer()->getComponent($element)->getEventName());
+                    } else if($element === 'all') {
+                        $components = $this->getContainer()->getComponents();
+                        foreach($components as $component) {
+                            echo $component->name() . " : \n\t" . implode("\n\t", $component->getEventName()) . "\n";
+                        }
                     }
             }
         }

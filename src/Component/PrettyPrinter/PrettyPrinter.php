@@ -68,8 +68,13 @@ class PrettyPrinter extends AbstractComponent {
      * Hello world
      * </code>
      */
-    public function write(string $str, $foreground_color = null, $background_color = null) : void
+    public function write(string $str, $foreground_color = null, $background_color = null, bool $centered = false) : void
     {
+        if($centered) {
+            $columns = exec('tput cols');
+            $str = str_pad($str, $columns, " ", STR_PAD_BOTH);
+        }
+
         echo sprintf('%s', $this->colored($str, $foreground_color, $background_color));
     }
 
@@ -83,8 +88,13 @@ class PrettyPrinter extends AbstractComponent {
      * Hello world(\n)
      * </code>
      */
-    public function writeLn(string $str, $foreground_color = null, $background_color = null) : void
+    public function writeLn(string $str, $foreground_color = null, $background_color = null, bool $centered = false) : void
     {
+        if($centered) {
+            $columns = exec('tput cols');
+            $str = str_pad($str, $columns, " ", STR_PAD_BOTH);
+        }
+
         echo sprintf("%s\n", $this->colored($str, $foreground_color, $background_color));
     }
 
@@ -100,10 +110,10 @@ class PrettyPrinter extends AbstractComponent {
      * -----------(\n)
      * </code>
      */
-    public function writeUnder(string $str, $foreground_color = null, $background_color = null) : void 
+    public function writeUnder(string $str, $foreground_color = null, $background_color = null, bool $centered = false) : void 
     {
-        $this->write($str, $foreground_color, $background_color);
-        $this->writeSeparator('-', strlen($str));
+        $this->write($str, $foreground_color, $background_color, $centered);
+        $this->writeSeparator('-', strlen($str), $centered);
     }
 
     /**
@@ -117,23 +127,28 @@ class PrettyPrinter extends AbstractComponent {
      * (\n)------------------------------(\n)
      * </code>
      */
-    public function writeSeparator(string $separator = '-', int $size = 60) 
+    public function writeSeparator(string $separator = '-', int $size = 60, bool $centered = false) 
     {
-        $this->writeLn("\n".str_repeat($separator, $size));
+        $this->writeLn("\n".str_repeat($separator, $size), null, null, $centered);
     }
 
     /**
      * Use it to write a line with a sleep between each characters
      */
-    public function writeScroll(string $str, int $time_milliseconds = 5) {
+    public function writeScroll(string $str, int $time_milliseconds = 5, bool $centered = false) {
+        if($centered) {
+            $columns = exec('tput cols');
+            $str = str_pad($str, $columns, " ", STR_PAD_BOTH);
+        }
+
         for($i = 0; $i < strlen($str); $i++) {
             $this->write($str[$i]);
             usleep($time_milliseconds * 1000);
         }
-        $this->writeln("");
+        $this->writeln('');
     }
 
-    public function writeProgressbar(int $value, int $min = 0, int $max = 100, string $label = '',string $barAppareance = '=', int $nbBars = 10) {
+    public function writeProgressbar(int $value, int $min = 0, int $max = 100, string $label = '',string $barAppareance = '=', int $nbBars = 10, bool $centered = false) {
         if($value > $max) {
             $value = $max;
         }
@@ -149,7 +164,7 @@ class PrettyPrinter extends AbstractComponent {
             $progressBar = $label . ' : ' . $progressBar;
         }
 
-        $this->writeLn($progressBar);
+        $this->writeLn($progressBar, null, null, $centered);
     }
 
     /**

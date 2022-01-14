@@ -1,6 +1,7 @@
 <?php
 
 use Jugid\Staurie\Component\Console\Console;
+use Jugid\Staurie\Component\Introduction\Introduction;
 use Jugid\Staurie\Component\Inventory\Inventory;
 use Jugid\Staurie\Component\Level\Level;
 use Jugid\Staurie\Component\Map\Map;
@@ -18,6 +19,13 @@ $staurie->register([
 
 $map = $staurie->getContainer()->registerComponent(Map::class);
 $map->config(['directory'=>__DIR__.'/maps','namespace'=>'Jugid\Staurie\Example\Maps', 'navigation'=>false]);
+
+$introduction = $staurie->getContainer()->registerComponent(Introduction::class);
+$introduction->config([
+    'text'=>[
+        'This is an introduction to test the introduction component',
+        'You can use it multiline by using an array in configuration'
+]]);
 
 $staurie->devmode();
 $staurie->run();
