@@ -129,7 +129,8 @@ class PrettyPrinter extends AbstractComponent {
      */
     public function writeSeparator(string $separator = '-', int $size = 60, bool $centered = false) 
     {
-        $this->writeLn("\n".str_repeat($separator, $size), null, null, $centered);
+        $this->writeLn('');
+        $this->writeLn(str_repeat($separator, $size), null, null, $centered);
     }
 
     /**

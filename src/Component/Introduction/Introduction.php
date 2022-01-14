@@ -39,7 +39,7 @@ class Introduction extends AbstractComponent {
 
         $pp = $this->container->getPrettyPrinter();
         
-        $pp->writeLn(strtoupper($this->config['title']), null, null, true);
+        $pp->writeUnder(strtoupper($this->config['title']), null, null, true);
         $this->printIntroduction($text, $scrolling, $scrolling_speed, $pp);
     }
 
@@ -54,7 +54,7 @@ class Introduction extends AbstractComponent {
             if($scrolling) {
                 $pp->writeScroll($text, $scrolling_speed, true);
             } else {
-                $pp->writeLn($text, true);
+                $pp->writeLn($text, null, null, true);
             }
         }
     }
