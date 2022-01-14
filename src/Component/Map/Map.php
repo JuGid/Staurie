@@ -7,6 +7,7 @@ use Jugid\Staurie\Game\Position;
 use Symfony\Component\Finder\Finder;
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Map\CoreFunctions\MoveFunction;
+use Jugid\Staurie\Component\Map\CoreFunctions\CompassFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\ViewFunction;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 
@@ -22,8 +23,7 @@ class Map extends AbstractComponent {
     }
 
     final public function getEventName() : array {
-        $events = ['map.view', 'map.move'];
-        return $events;
+        return ['map.view', 'map.move', 'map.compass'];
     }
 
     final public function require() : array {
@@ -36,6 +36,7 @@ class Map extends AbstractComponent {
 
         if($this->config['navigation']) {
             $console->addFunction(new MoveFunction());
+            $console->addFunction(new CompassFunction());
         }
         
         $this->initializeBlueprintsFromFiles();
@@ -48,6 +49,9 @@ class Map extends AbstractComponent {
 
     final protected function action(string $event, array $arguments) : void {
         switch($event) {
+            case 'map.compass':
+                $this->compass();
+                break;
             case 'map.view':
                 $this->view();
                 break;
@@ -55,6 +59,26 @@ class Map extends AbstractComponent {
                 $this->move($arguments['direction']);
                 break;
         }
+    }
+
+    private function compass() : void {
+        
+        $map_names = [];
+        $directions = [
+            'north'=> ['x' => 0,  'y' => 1],
+            'south'=> ['x' => 0,  'y' => -1],
+            'west' => ['x' => -1, 'y' => 0],
+            'east' => ['x' => 1,  'y' => 0]
+        ];
+
+        foreach($directions as $direction => $adds) {
+            $positionToBlueprint = Position::get($this->current_position->x + $adds['x'], $this->current_position->y + $adds['y']);
+            $blueprint = $this->getBlueprint($positionToBlueprint);
+
+            $map_names[] = [$direction, $blueprint !== null ? $blueprint->name() : '---'];
+        }
+
+        $this->container->getPrettyPrinter()->writeTable(['Direction', 'Map'], $map_names);
     }
 
     private function view() : void {
@@ -67,6 +91,7 @@ class Map extends AbstractComponent {
         $pp->writeUnder('Map view', 'green');
         $description = str_split($current_blueprint->description(), self::CHAR_PER_LINE);
         $description_rows = [];
+
         foreach($description as $desc) {
             $description_rows[] = [$desc];
         }
@@ -76,50 +101,37 @@ class Map extends AbstractComponent {
             $description_rows
         );
 
-        $npcs = [];
-        foreach($current_blueprint->getNpcs() as $npc) {
-            $npcs[] = [$npc->name(), $npc->description()];
-        }
-
-        if(!empty($npcs)) {
-            $pp->writeLn('There are npcs to speak with', null, 'green');
+        if(!empty($current_blueprint->getNpcs())) {
+            $npcs = [];
+            foreach($current_blueprint->getNpcs() as $npc) {
+                $npcs[] = [$npc->name(), $npc->description()];
+            }
+    
+            $pp->writeLn('There are npcs to speak with', 'green');
             $pp->writeTable(['Name', 'Description'], $npcs);
         }
+        
+        if(!empty($current_blueprint->getNpcs())) {
+            $items = [];
+            foreach($current_blueprint->getItems() as $item) {
+                $stats = [];
+                foreach($item->statistics() as $stat=>$value) {
+                    $stats[] = $stat.' : '.$value;
+                }
 
-        $items = [];
-        foreach($current_blueprint->getItems() as $item) {
-            $stats = [];
-            foreach($item->statistics() as $stat=>$value) {
-                $stats[] = $stat.' : '.$value;
+                $items[] = [$item->name(), $item->description(), implode(', ', $stats) ];
             }
 
-            $items[] = [$item->name(), $item->description(), implode(', ', $stats) ];
-        }
-
-        if(!empty($items)) {
-            $pp->writeLn('There are items to take', null, 'green');
+            $pp->writeLn('There are items to take', 'green');
             $pp->writeTable(['Name', 'Description', 'Statistics'], $items);
         }
-        
     }
 
     private function move(string $direction) : void {
         $pp = $this->container->getPrettyPrinter();
         $previousPosition = clone $this->current_position;
-        switch($direction) {
-            case 'north':
-                $this->current_position->goNorth();
-                break;
-            case 'south':
-                $this->current_position->goSouth();
-                break;
-            case 'west':
-                $this->current_position->goWest();
-                break;
-            case 'east':
-                $this->current_position->goEast();
-                break;
-        }
+        $go_function = 'go'. ucfirst($direction);
+        $this->current_position->$go_function();
 
         if(null === $this->getBlueprint($this->current_position)) {
             $pp->writeLn('Something prevents you to go to the '.$direction, null, 'red');
@@ -156,10 +168,8 @@ class Map extends AbstractComponent {
     }
 
     private function initializeBlueprintsFromFiles() : void {
-        $directory = $this->config['directory'];
-        
         $finder = new Finder();
-        $finder->files()->in($directory)->name('*.php');
+        $finder->files()->in($this->config['directory'])->name('*.php');
 
         foreach ($finder as $file) {
             $bp_file = str_replace('.php', '', $file->getRelativePathname());
@@ -192,7 +202,7 @@ class Map extends AbstractComponent {
         }
     }
 
-    final public function defaultConfig() : array {
+    final public function defaultConfiguration() : array {
         return [
             'directory'=>null,
             'namespace'=>null,

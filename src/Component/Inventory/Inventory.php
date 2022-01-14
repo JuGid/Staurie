@@ -140,7 +140,7 @@ class Inventory extends AbstractComponent {
         return 'inventory';
     }
 
-    final public function defaultConfig() : array {
+    final public function defaultConfiguration() : array {
         return [
             'inventory_size'=>20,
             'stackable'=>true

@@ -95,7 +95,7 @@ class Console extends AbstractComponent {
         return $functions;
     }
 
-    public function defaultConfig() : array {
+    public function defaultConfiguration() : array {
         return [];
     }
 

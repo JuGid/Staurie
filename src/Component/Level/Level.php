@@ -27,7 +27,7 @@ class Level extends AbstractComponent {
     }
 
     public function getEventName() : array {
-        return ['level.up', 'level.ask', 'level.gain'];
+        return ['level.up', 'level.view', 'level.gain'];
     }
 
     protected function action(string $event, array $arguments) : void {
@@ -35,8 +35,8 @@ class Level extends AbstractComponent {
             case 'level.up':
                 $this->up();
                 break;
-            case 'level.ask':
-                $this->ask();
+            case 'level.view':
+                $this->view();
                 break;
             case 'level.gain':
                 break;
@@ -49,7 +49,7 @@ class Level extends AbstractComponent {
         }
     }
 
-    private function ask() {
+    private function view() {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeLn('Level : ' . $this->level . '/' . $this->config['max_level']);
         $pp->writeProgressbar($this->experience, 0, $this->getExperienceForCurrentLevel());
@@ -60,7 +60,7 @@ class Level extends AbstractComponent {
         return eval('return '.$formula.';');
     }
 
-    public function defaultConfig(): array
+    public function defaultConfiguration(): array
     {
         return [
             'formula'=> '{level}*{level}+110',

@@ -14,6 +14,10 @@ class Position {
         $this->y = $y;
     }
 
+    public static function get(int $x, int $y) : self {
+        return new self($x, $y);
+    }
+
     public function isSame(Position $position) : bool {
         return $position->x === $this->x && $position->y === $this->y;
     }

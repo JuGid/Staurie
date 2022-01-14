@@ -24,7 +24,7 @@ class PrettyPrinter extends AbstractComponent {
 
     protected function action(string $event, array $arguments) : void {}
 
-    public function defaultConfig() : array {
+    public function defaultConfiguration() : array {
         return [];
     }
     
@@ -156,7 +156,7 @@ class PrettyPrinter extends AbstractComponent {
 
         $valuePerCent = round($value*100/$max, 2);
         $valuePerBar = round($max/$nbBars, 0, PHP_ROUND_HALF_UP);
-        $nbBars = round($value/$valuePerBar, 0, PHP_ROUND_HALF_UP);
+        $nbBars = $valuePerBar > 0 ? round($value/$valuePerBar, 0, PHP_ROUND_HALF_UP) : 0;
         $nbSpaces = 10 - $nbBars;
 
         $progressBar = sprintf('[%s%s] %.2f%% (%d/%d)', str_repeat($barAppareance, $nbBars), str_repeat(' ', $nbSpaces), $valuePerCent, $value, $max);

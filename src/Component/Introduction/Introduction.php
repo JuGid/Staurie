@@ -59,7 +59,7 @@ class Introduction extends AbstractComponent {
         }
     }
 
-    public function defaultConfig(): array
+    public function defaultConfiguration(): array
     {
         return [
             'title' => 'My game',

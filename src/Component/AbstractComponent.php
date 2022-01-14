@@ -30,7 +30,7 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
         if(in_array($event, $this->getSystemEventNames())) {
             switch($event) {
                 case 'staurie.initialize':
-                    $this->config = $this->config ?? $this->defaultConfig();
+                    $this->config = $this->config ?? $this->defaultConfiguration();
                     $this->initialize();
                     break;
             }
@@ -47,8 +47,8 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
         return $this->priority;
     }
 
-    final public function config(array $config) : void {
-        $default = $this->defaultConfig();
+    final public function configuration(array $config) : void {
+        $default = $this->defaultConfiguration();
         $this->config = array_merge($default, $config);
     }
 

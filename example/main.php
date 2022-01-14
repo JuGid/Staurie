@@ -18,10 +18,14 @@ $staurie->register([
 ]);
 
 $map = $staurie->getContainer()->registerComponent(Map::class);
-$map->config(['directory'=>__DIR__.'/maps','namespace'=>'Jugid\Staurie\Example\Maps', 'navigation'=>false]);
+$map->configuration([
+    'directory'=>__DIR__.'/maps',
+    'namespace'=>'Jugid\Staurie\Example\Maps', 
+    'navigation'=>true
+]);
 
 $introduction = $staurie->getContainer()->registerComponent(Introduction::class);
-$introduction->config([
+$introduction->configuration([
     'text'=>[
         'This is an introduction to test the introduction component',
         'You can use it multiline by using an array in configuration'

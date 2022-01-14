@@ -69,7 +69,7 @@ abstract class MainCharacter extends AbstractComponent {
     }
 
     private function printLevel() : void {
-        $this->container->dispatcher()->dispatch('level.ask');
+        $this->container->dispatcher()->dispatch('level.view');
     }
 
     private function speak(string $npc_name) {
@@ -101,7 +101,7 @@ abstract class MainCharacter extends AbstractComponent {
         $pp->writeScroll($dial, 20);
     }
 
-    final public function defaultConfig() : array {
+    final public function defaultConfiguration() : array {
         return [
             'name'=>'Unknown',
             'statistics'=>[

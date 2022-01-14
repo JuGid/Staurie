@@ -26,7 +26,7 @@ class Save extends AbstractComponent {
         $console->addFunction(new SaveFunction());
     }
 
-    public function defaultConfig() : array {
+    public function defaultConfiguration() : array {
         return [
             'directory'=>__DIR__.'/../../../../saves/'
         ];
