@@ -7,6 +7,10 @@ use Jugid\Staurie\Component\Console\AbstractConsoleFunction;
 class ExitFunction extends AbstractConsoleFunction {
 
     public function action(array $args) : void {
+        if($this->ask('Do you want to save the game ?', ['Y','N']) === 'Y' ) {
+            $this->getContainer()->dispatcher()->dispatch('save.save');
+        }
+
         $this->getContainer()->state()->stop();
     }
 

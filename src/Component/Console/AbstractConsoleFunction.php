@@ -52,6 +52,12 @@ abstract class AbstractConsoleFunction implements Containerable, Describable {
         return [$this->name(), $this->description(), ($this->nbArgs > 0 ? '['. $args . ']' : '')];
     }
 
+    final protected function ask(string $question, ?array $possibleOptions = null) {
+        $question_complete = $question . ($possibleOptions !== null ? ' ('.implode('/', $possibleOptions).')' : '') . ' >> ';
+        
+        return readline($question_complete);
+    }
+
     abstract public function action(array $args) : void;
     abstract public function getArgs() : int|array;
 }

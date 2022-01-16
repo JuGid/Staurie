@@ -29,7 +29,8 @@ $introduction->configuration([
     'text'=>[
         'This is an introduction to test the introduction component',
         'You can use it multiline by using an array in configuration'
-]]);
+    ]
+]);
 
 $staurie->devmode();
 $staurie->run();
