@@ -48,11 +48,8 @@ class Inventory extends AbstractComponent {
             case 'inventory.drop':
                 $this->drop($arguments['item_name']);
                 break;
-            case 'inventory.view':
-                $this->view();
-                break;
-            case 'inventory.size':
-                $this->size();
+            default:
+                $this->eventToAction($event);
                 break;
         }
     }
@@ -85,7 +82,7 @@ class Inventory extends AbstractComponent {
         $pp->writeLn('Item dropped', null, 'green');
     }
 
-    private function view() : void {
+    final protected function view() : void {
         $pp = $this->container->getPrettyPrinter();
         $items = [];
 
@@ -99,13 +96,14 @@ class Inventory extends AbstractComponent {
         }
 
         if(!empty($items)) {
+            $pp->writeUnder('Your inventory', 'green');
             $pp->writeTable(['Name', 'Description', 'Statistics'], $items);
         } else {
             $pp->writeLn('Inventory is empty', null, 'red');
         }
     }
 
-    private function size() : void {
+    final protected function size() : void {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeLn("Inventory size : ". count($this->inventory) .'/'.$this->size);
     }

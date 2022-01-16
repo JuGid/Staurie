@@ -7,7 +7,7 @@ use Jugid\Staurie\Component\Console\AbstractConsoleFunction;
 class TakeFunction extends AbstractConsoleFunction {
 
     public function action(array $args) : void {
-        $this->getContainer()->dispatcher()->dispatch('inventory.take', ['item_name'=>$args[1]]); 
+        $this->getContainer()->dispatcher()->dispatch('inventory.take', ['item_name'=>$args[0]]); 
     }
 
     public function name() : string {

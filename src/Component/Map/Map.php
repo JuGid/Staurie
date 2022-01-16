@@ -111,7 +111,7 @@ class Map extends AbstractComponent {
             $pp->writeTable(['Name', 'Description'], $npcs);
         }
         
-        if(!empty($current_blueprint->getNpcs())) {
+        if(!empty($current_blueprint->getItems())) {
             $items = [];
             foreach($current_blueprint->getItems() as $item) {
                 $stats = [];
