@@ -31,6 +31,11 @@ class Map extends AbstractComponent {
     }
     
     final public function initialize() : void {
+
+        if(null === $this->config['directory'] || null === $this->config['namespace']) {
+            throw new LogicException('Option directory or namespace is no configured. Please use the configuration().');
+        }
+
         $console = $this->container->getConsole();
         $console->addFunction(new ViewFunction());
 
