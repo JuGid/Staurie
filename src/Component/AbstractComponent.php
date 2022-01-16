@@ -52,6 +52,15 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
         $this->config = array_merge($default, $config);
     }
 
+    /**
+     * Return the last event part, exploded by $separator, and call it.
+     */
+    final protected function eventToAction(string $event, string $separator = '.') {
+        $event_explode = explode($separator, $event);
+        $action = end($event_explode);
+        $this->$action();
+    }
+
     abstract public function getEventName() : array;
     abstract protected function action(string $event, array $arguments) : void;
 }
