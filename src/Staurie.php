@@ -8,9 +8,10 @@ class Staurie {
 
     private Container $container;
 
-    public function __construct()
+    public function __construct(string $name)
     {
         $this->container = new Container();
+        $this->container->state()->setGameName($name);
     }
 
     public function devmode() {
@@ -20,7 +21,7 @@ class Staurie {
     public function run() : void {
         $this->initialize();
 
-        $this->container->dispatcher()->dispatch('introduction.show');
+        $this->container->dispatcher()->dispatch('menu.show');
         
         while($this->container->state()->isRunning()) {
             $this->container->dispatcher()->dispatch('console.console');

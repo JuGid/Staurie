@@ -62,7 +62,7 @@ class Introduction extends AbstractComponent {
     public function defaultConfiguration(): array
     {
         return [
-            'title' => 'My game',
+            'title' => $this->container->state()->getGameName(),
             'text' => ['Your game introduction'],
             'scrolling' => true,
             'scrolling_speed' => 5

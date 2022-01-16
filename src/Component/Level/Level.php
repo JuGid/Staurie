@@ -12,6 +12,8 @@ class Level extends AbstractComponent {
 
     private $experience;
 
+    private $points;
+
     public function name() : string {
         return 'level';
     }
@@ -24,34 +26,29 @@ class Level extends AbstractComponent {
     {
         $this->level = 1;
         $this->experience = 0;
+        $this->points = $this->config['start_points'];
     }
 
     public function getEventName() : array {
-        return ['level.up', 'level.view', 'level.gain'];
+        return ['level.up', 'level.view'];
     }
 
     protected function action(string $event, array $arguments) : void {
-        switch($event){
-            case 'level.up':
-                $this->up();
-                break;
-            case 'level.view':
-                $this->view();
-                break;
-            case 'level.gain':
-                break;
-        }
+        $this->eventToAction($event);
     }
 
-    private function up() {
+    final protected function up() {
         if($this->level < $this->config['max_level']) {
             $this->level++;
+            $this->points += $this->config['point_per_level'];
         }
     }
 
-    private function view() {
+    final protected function view() {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeLn('Level : ' . $this->level . '/' . $this->config['max_level']);
+        $pp->write('Points : ');
+        $pp->writeln($this->points, $this->points > 0 ? 'green': null);
         $pp->writeProgressbar($this->experience, 0, $this->getExperienceForCurrentLevel());
     }
 
@@ -63,8 +60,10 @@ class Level extends AbstractComponent {
     public function defaultConfiguration(): array
     {
         return [
-            'formula'=> '{level}*{level}+110',
-            'max_level'=>50
+            'formula' => '{level}*{level}+110',
+            'max_level' => 50,
+            'start_points' => 3,
+            'point_per_level' => 1
         ];
     }
 }

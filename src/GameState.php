@@ -8,10 +8,21 @@ class GameState {
 
     private bool $devmode;
 
+    private string $gamename;
+
     public function __construct()
     {
         $this->running = true;
         $this->devmode = false;
+        $this->gamename = '';
+    }
+
+    public function getGameName() : string {
+        return $this->gamename;
+    }
+
+    public function setGameName(string $name) : void {
+        $this->gamename = $name;
     }
 
     public function isRunning() : bool {

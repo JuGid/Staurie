@@ -12,12 +12,14 @@ abstract class MainCharacter extends AbstractComponent {
 
     private array $statistics = [];
 
+    private string $name;
+
     final public function name() : string {
         return 'character';
     }
 
     final public function getEventName() : array {
-        $events = ['character.me'];
+        $events = ['character.me', 'character.new'];
 
         if($this->container->isComponentRegistered(Map::class)) {
             array_push($events, 'character.speak');
@@ -39,23 +41,31 @@ abstract class MainCharacter extends AbstractComponent {
         }
 
         $this->statistics = $this->config['statistics'];
+        $this->name = $this->config['name'];
     }
 
     final protected function action(string $event, array $arguments) : void {
         switch($event) {
-            case 'character.me':
-                $this->me();
-                break;
             case 'character.speak':
                 $this->speak($arguments['to']);
+                break;
+            default:
+                $this->eventToAction($event);
                 break;
         }
     }
 
-    private function me() {
+    final protected function new() {
+        $this->name = readline('Character name : ');
+
+        $pp = $this->container->getPrettyPrinter();
+        $pp->writeLn('Welcome ' . $this->name, 'green');
+    }
+
+    final protected function me() {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeUnder('Details', 'green');
-        $pp->writeLn('Name : ' . $this->config['name']);
+        $pp->writeLn('Name : ' . $this->name);
 
         $this->printLevel();
 
