@@ -7,7 +7,9 @@ use Jugid\Staurie\Component\Console\AbstractConsoleFunction;
 class SaveFunction extends AbstractConsoleFunction {
 
     public function action(array $args) : void {
-        $this->getContainer()->dispatcher()->dispatch('save.save');
+        $this->getContainer()->dispatcher()->dispatch('staurie.save');
+        $pp = $this->getContainer()->getPrettyPrinter();
+        $pp->writeLn('Save completed !', 'green');
     }
 
     public function name() : string {

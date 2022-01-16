@@ -9,30 +9,30 @@ use Jugid\Staurie\Component\Save\CoreFunctions\SaveFunction;
 
 class Save extends AbstractComponent {
 
-    public function name() : string {
+    final public function name() : string {
         return 'save';
     }
 
-    public function getEventName() : array {
-        return ['save.save'];
+    final public function getEventName() : array {
+        return [];
     }
 
-    public function require() : array {
+    final public function require() : array {
         return [Console::class, PrettyPrinter::class];
     }
     
-    public function initialize() : void {
+    final public function initialize() : void {
         $console = $this->container->getConsole();
         $console->addFunction(new SaveFunction());
     }
 
-    public function defaultConfiguration() : array {
+    final public function defaultConfiguration() : array {
         return [
             'directory'=>__DIR__.'/../../../../saves/'
         ];
     }
 
-    protected function action(string $event, array $arguments) : void {
-        echo "Saving\n";
+    final protected function action(string $event, array $arguments) : void {
+        
     }
 }

@@ -19,7 +19,7 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
     }
 
     final public function getSystemEventNames() : array {
-        return ['staurie.initialize'];
+        return ['staurie.initialize', 'staurie.save', 'staurie.load'];
     }
 
     final public function setContainer(Container $container) : void {
@@ -33,6 +33,8 @@ abstract class AbstractComponent implements ListenerInterface, Containerable, Co
                     $this->config = $this->config ?? $this->defaultConfiguration();
                     $this->initialize();
                     break;
+                case 'staurie.save':
+                    echo "Saving ". $this->name() ."\n";
             }
         } elseif(in_array($event, $this->getEventName())) {
             $this->action($event, $arguments);
