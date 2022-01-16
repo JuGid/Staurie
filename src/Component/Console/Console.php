@@ -32,6 +32,19 @@ class Console extends AbstractComponent {
 
     public function initialize() : void {
         $this->addCoreFunctions();
+
+        readline_completion_function(function($input, $index) {
+            $functions = $this->functions;
+            $matches = [];
+            
+            foreach($functions as $funct) {
+                if(str_contains($funct->name(), $input)) {
+                    $matches[] = $funct->name();
+                }
+            }
+
+            return $matches;
+        });
     }
 
     private function addCoreFunctions() : void {

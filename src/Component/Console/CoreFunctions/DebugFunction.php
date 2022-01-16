@@ -12,8 +12,9 @@ class DebugFunction extends AbstractConsoleFunction {
     private const EVENTS_TYPE = 'events';
     
     public function action(array $args) : void {
-        $type = $args[0];
-        $element = $args[1];
+
+        $type = $args[0] ?? '';
+        $element = $args[1] ?? '';
 
         if($this->getContainer()->state()->isDevmode()) {
             switch($type) {
