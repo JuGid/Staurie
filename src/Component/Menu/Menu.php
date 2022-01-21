@@ -5,10 +5,13 @@ namespace Jugid\Staurie\Component\Menu;
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Console\Console;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
+use LogicException;
 
 class Menu extends AbstractComponent {
 
-    private const MENU_OPTIONS = ['New game', 'Continue', 'Quit'];
+    private const MENU_OPTIONS_ORDER = ['new_game', 'continue', 'quit'];
+
+    private $menu_options = [];
 
     final public function name() : string {
         return 'menu';
@@ -24,10 +27,22 @@ class Menu extends AbstractComponent {
     
     final public function initialize() : void {
 
+        foreach(self::MENU_OPTIONS_ORDER as $option) {
+            if(!in_array($option, array_keys($this->config['labels']))) {
+                throw new LogicException('You MUST set all the labels for you menu labels if you change one');
+            }
+
+            $this->menu_options[] = $this->config['labels'][$option];
+        }
     }
 
     final public function defaultConfiguration() : array {
         return [
+            'labels'=> [
+                'new_game'=> 'New game',
+                'continue' => 'Continue',
+                'quit'=>'Quit'
+            ],
             'text'=>null
         ];
     }
@@ -48,7 +63,7 @@ class Menu extends AbstractComponent {
             $pp->writeLn('');
         }
 
-        foreach(self::MENU_OPTIONS as $index=>$option) {
+        foreach($this->menu_options as $index=>$option) {
             $pp->writeLn('['.$index.'] '.$option, null, null, true);
         }
 
@@ -63,6 +78,10 @@ class Menu extends AbstractComponent {
                 break;
             case '2':
                 $this->container->state()->stop();
+                break;
+            default:
+                $pp->writeLn('Not a valid answer', 'red');
+                $this->show();
                 break;
         }
     }

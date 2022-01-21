@@ -27,7 +27,12 @@ $staurie->register([
 
 $menu = $staurie->getContainer()->registerComponent(Menu::class);
 $menu->configuration([
-    'text'=> 'Welcome to this awesome test adventure'
+    'text'=> 'Welcome to this awesome test adventure',
+    'labels'=> [
+        'new_game' => 'Enter the world',
+        'quit'=> 'Exit game',
+        'continue' => 'Continue from save'
+    ]
 ]);
 
 $map = $staurie->getContainer()->registerComponent(Map::class);
