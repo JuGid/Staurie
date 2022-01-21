@@ -7,10 +7,11 @@ use Jugid\Staurie\Component\Character\CoreFunctions\MainCharacterFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\SpeakFunction;
 use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
+use Jugid\Staurie\Game\Npc;
 
-abstract class MainCharacter extends AbstractComponent {
+class MainCharacter extends AbstractComponent {
 
-    private array $statistics = [];
+    private Statistics $statistics;
 
     private string $name;
 
@@ -72,7 +73,8 @@ abstract class MainCharacter extends AbstractComponent {
         $pp->writeUnder("\nYour statistics", 'green');
         $header = ['Attribute', 'Value'];
         $line = [];
-        foreach($this->statistics as $name=>$value) {
+
+        foreach($this->statistics->asArray() as $name=>$value) {
             $line[] = [ucfirst($name), $value];
         }
         $pp->writeTable($header, $line);
@@ -86,7 +88,7 @@ abstract class MainCharacter extends AbstractComponent {
         $pp = $this->container->getPrettyPrinter();
         $npc = $this->container->getMap()->getCurrentBlueprint()->getNpc($npc_name);
 
-        if(null !== $npc) {
+        if(null !== $npc && $npc instanceof Npc) {
             $dialog = $npc->speak();
             $this->printNpcDialog($npc_name, $dialog);
         } else {
@@ -114,11 +116,7 @@ abstract class MainCharacter extends AbstractComponent {
     final public function defaultConfiguration() : array {
         return [
             'name'=>'Unknown',
-            'statistics'=>[
-                'chance'=>0,
-                'ability'=>0,
-                'wisdom'=>0
-            ]
+            'statistics'=>Statistics::default()
         ];
     }
 }

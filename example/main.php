@@ -1,5 +1,6 @@
 <?php
 
+use Jugid\Staurie\Component\Character\MainCharacter;
 use Jugid\Staurie\Component\Console\Console;
 use Jugid\Staurie\Component\Introduction\Introduction;
 use Jugid\Staurie\Component\Inventory\Inventory;
@@ -10,7 +11,6 @@ use Jugid\Staurie\Component\Money\Money;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Component\Save\Save;
 use Jugid\Staurie\Staurie;
-use Jugid\Staurie\Example\Player;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -18,7 +18,7 @@ $staurie = new Staurie('My test game');
 $staurie->register([
     Console::class, 
     PrettyPrinter::class, 
-    Player::class, 
+    MainCharacter::class, 
     Save::class,
     Inventory::class, 
     Level::class, 

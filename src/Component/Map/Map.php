@@ -10,6 +10,8 @@ use Jugid\Staurie\Component\Map\CoreFunctions\MoveFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\CompassFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\ViewFunction;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
+use Jugid\Staurie\Game\Item;
+use Jugid\Staurie\Game\Npc;
 
 class Map extends AbstractComponent {
 
@@ -109,6 +111,10 @@ class Map extends AbstractComponent {
         if(!empty($current_blueprint->getNpcs())) {
             $npcs = [];
             foreach($current_blueprint->getNpcs() as $npc) {
+                if(!$npc instanceof Npc) {
+                   continue; 
+                }
+
                 $npcs[] = [$npc->name(), $npc->description()];
             }
     
@@ -120,6 +126,10 @@ class Map extends AbstractComponent {
             $items = [];
             foreach($current_blueprint->getItems() as $item) {
                 $stats = [];
+                if(!$item instanceof Item) {
+                    continue; 
+                 }
+                 
                 foreach($item->statistics() as $stat=>$value) {
                     $stats[] = $stat.' : '.$value;
                 }
