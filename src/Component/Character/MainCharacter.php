@@ -15,6 +15,8 @@ class MainCharacter extends AbstractComponent {
 
     private string $name;
 
+    private string $gender;
+
     final public function name() : string {
         return 'character';
     }
@@ -58,6 +60,10 @@ class MainCharacter extends AbstractComponent {
 
     final protected function new() {
         $this->name = readline('Character name : ');
+        $this->gender = readline('Character gender : ');
+
+        $this->container->dispatcher()->dispatch('race.ask');
+        $this->container->dispatcher()->dispatch('tribe.ask');
 
         $pp = $this->container->getPrettyPrinter();
         $pp->writeLn('Welcome ' . $this->name, 'green');
@@ -67,8 +73,11 @@ class MainCharacter extends AbstractComponent {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeUnder('Details', 'green');
         $pp->writeLn('Name : ' . $this->name);
+        $pp->writeLn('Gender : ' . $this->gender);
 
-        $this->printLevel();
+        $this->container->dispatcher()->dispatch('race.view');
+        $this->container->dispatcher()->dispatch('tribe.view');
+        $this->container->dispatcher()->dispatch('level.view');
 
         $pp->writeUnder("\nYour statistics", 'green');
         $header = ['Attribute', 'Value'];
@@ -78,10 +87,6 @@ class MainCharacter extends AbstractComponent {
             $line[] = [ucfirst($name), $value];
         }
         $pp->writeTable($header, $line);
-    }
-
-    private function printLevel() : void {
-        $this->container->dispatcher()->dispatch('level.view');
     }
 
     private function speak(string $npc_name) {

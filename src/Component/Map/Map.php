@@ -170,13 +170,10 @@ class Map extends AbstractComponent {
     }
 
     final public function addBlueprint(string $bp_class) : self {
-        $blueprint_verif = new $bp_class();
-        
-        if(!$blueprint_verif instanceof Blueprint) {
+
+        if(!is_subclass_of($bp_class, 'Blueprint')) {
             throw new LogicException('Blueprint for map component should extends ' . Blueprint::class);
         }
-
-        unset($blueprint_verif);
 
         $this->container->register(self::CONTAINER_BLUEPRINT, $bp_class);
         return $this;
