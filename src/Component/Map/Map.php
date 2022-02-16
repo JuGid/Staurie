@@ -46,8 +46,14 @@ class Map extends AbstractComponent {
 
         if($this->config['navigation']) {
             $console->addFunction(new MoveFunction());
-            $console->addFunction(new CompassFunction());
-            $console->addFunction(new MapFunction());
+            
+            if($this->config['compass_enable']) {
+                $console->addFunction(new CompassFunction());
+            }
+
+            if($this->config['map_enable']) {
+                $console->addFunction(new MapFunction());
+            }
         }
         
         $this->initializeBlueprintsFromFiles();
@@ -222,11 +228,13 @@ class Map extends AbstractComponent {
 
     final public function defaultConfiguration() : array {
         return [
-            'directory'=>null,
-            'namespace'=>null,
-            'navigation'=>true,
-            'x_start'=>0,
-            'y_start'=>0
+            'directory'=> null,
+            'namespace'=> null,
+            'navigation'=> true,
+            'map_enable'=> true,
+            'compass_enable'=> true,
+            'x_start'=> 0,
+            'y_start'=> 0
         ];
     }
 
