@@ -45,6 +45,7 @@ class MainCharacter extends AbstractComponent {
 
         $this->statistics = $this->config['statistics'];
         $this->name = $this->config['name'];
+        $this->gender = $this->config['gender'];
     }
 
     final protected function action(string $event, array $arguments) : void {
@@ -121,6 +122,7 @@ class MainCharacter extends AbstractComponent {
     final public function defaultConfiguration() : array {
         return [
             'name'=>'Unknown',
+            'gender'=>'Unknown',
             'statistics'=>Statistics::default()
         ];
     }

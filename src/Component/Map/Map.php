@@ -3,11 +3,12 @@
 namespace Jugid\Staurie\Component\Map;
 
 use LogicException;
-use Jugid\Staurie\Game\Position;
+use Jugid\Staurie\Game\Position\Position;
 use Symfony\Component\Finder\Finder;
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Map\CoreFunctions\MoveFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\CompassFunction;
+use Jugid\Staurie\Component\Map\CoreFunctions\MapFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\ViewFunction;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Game\Item;
@@ -20,12 +21,14 @@ class Map extends AbstractComponent {
 
     private Position $current_position;
 
+    private MapPrinter $printer;
+
     final public function name() : string {
         return 'map';
     }
 
     final public function getEventName() : array {
-        return ['map.view', 'map.move', 'map.compass'];
+        return ['map.view', 'map.move', 'map.compass', 'map.map'];
     }
 
     final public function require() : array {
@@ -44,6 +47,7 @@ class Map extends AbstractComponent {
         if($this->config['navigation']) {
             $console->addFunction(new MoveFunction());
             $console->addFunction(new CompassFunction());
+            $console->addFunction(new MapFunction());
         }
         
         $this->initializeBlueprintsFromFiles();
@@ -52,31 +56,26 @@ class Map extends AbstractComponent {
         if(null === $this->getBlueprint($this->current_position)) {
             throw new LogicException('There is no map at start position which is '. $this->current_position);
         }
+
+        $this->container->register('printer', MapPrinter::class);
     }
 
     final protected function action(string $event, array $arguments) : void {
         switch($event) {
-            case 'map.compass':
-                $this->compass();
-                break;
-            case 'map.view':
-                $this->view();
-                break;
             case 'map.move':
                 $this->move($arguments['direction']);
+                break;
+            default:
+                $this->eventToAction($event);
                 break;
         }
     }
 
-    private function compass() : void {
+    protected function compass() : void {
         
         $map_names = [];
-        $directions = [
-            'north'=> ['x' => 0,  'y' => 1],
-            'south'=> ['x' => 0,  'y' => -1],
-            'west' => ['x' => -1, 'y' => 0],
-            'east' => ['x' => 1,  'y' => 0]
-        ];
+        $directions = ['north'=> ['x' => 0,  'y' => 1],'south'=> ['x' => 0,  'y' => -1],
+                       'west' => ['x' => -1, 'y' => 0],'east' => ['x' => 1,  'y' => 0]];
 
         foreach($directions as $direction => $adds) {
             $positionToBlueprint = Position::get($this->current_position->x + $adds['x'], $this->current_position->y + $adds['y']);
@@ -88,9 +87,10 @@ class Map extends AbstractComponent {
         $this->container->getPrettyPrinter()->writeTable(['Direction', 'Map'], $map_names);
     }
 
-    private function view() : void {
+    protected function view() : void {
         $pp = $this->container->getPrettyPrinter();
         $current_blueprint = $this->getBlueprint($this->current_position);
+
         if($current_blueprint === null) {
             throw new LogicException('No map at position '. $this->current_position . '. You should think about creating one.');
         }
@@ -103,10 +103,7 @@ class Map extends AbstractComponent {
             $description_rows[] = [$desc];
         }
 
-        $pp->writeTable(
-            [$current_blueprint->name() . ' ' . $this->current_position],
-            $description_rows
-        );
+        $pp->writeTable([$current_blueprint->name() . ' ' . $this->current_position],$description_rows);
 
         if(!empty($current_blueprint->getNpcs())) {
             $npcs = [];
@@ -142,7 +139,7 @@ class Map extends AbstractComponent {
         }
     }
 
-    private function move(string $direction) : void {
+    protected function move(string $direction) : void {
         $pp = $this->container->getPrettyPrinter();
         $previousPosition = clone $this->current_position;
         $go_function = 'go'. ucfirst($direction);
@@ -152,6 +149,11 @@ class Map extends AbstractComponent {
             $pp->writeLn('Something prevents you to go to the '.$direction, null, 'red');
             $this->current_position = $previousPosition;
         } 
+    }
+
+    protected function map() : void {
+        $mapPrinter = $this->container->get('printer','MapPrinter');
+        $mapPrinter->print();
     }
 
     final public function getCurrentBlueprint() : Blueprint {
@@ -171,7 +173,7 @@ class Map extends AbstractComponent {
 
     final public function addBlueprint(string $bp_class) : self {
 
-        if(!is_subclass_of($bp_class, 'Blueprint')) {
+        if(!is_subclass_of($bp_class, Blueprint::class)) {
             throw new LogicException('Blueprint for map component should extends ' . Blueprint::class);
         }
 
@@ -186,7 +188,7 @@ class Map extends AbstractComponent {
         foreach ($finder as $file) {
             $bp_file = str_replace('.php', '', $file->getRelativePathname());
             $bp_class = $this->fileDirectoryToNamespace($bp_file);
-
+            
             $this->addBlueprint($bp_class);
         }
 
@@ -212,6 +214,10 @@ class Map extends AbstractComponent {
         foreach($blueprints as $blueprint) {
             $blueprint->initialize();
         }
+    }
+
+    public function getBlueprints() : array {
+        return $this->container->gets(self::CONTAINER_BLUEPRINT);
     }
 
     final public function defaultConfiguration() : array {

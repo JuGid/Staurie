@@ -229,7 +229,7 @@ class PrettyPrinter extends AbstractComponent {
         $line_print = '';
         $column = 0;
         foreach($array as $cell) {
-            $line_print .= sprintf($cell_format, $cell.str_repeat(' ', $columns_length[$column] - strlen($cell)));
+            $line_print .= sprintf($cell_format, $cell . str_repeat(' ', $columns_length[$column] - strlen($cell)));
             $column++;
         }
         $line_print.=$end_line;
@@ -263,14 +263,13 @@ class PrettyPrinter extends AbstractComponent {
 
         for($i = 0; $i < $numberOfColumns; $i++)
         {
-            $columnValues = array_map(function($line) use($i) {
+            $columnLengths = array_map(function($line) use($i) {
                 return $line[$i];
             }, $contentMax);
 
-            $maxLengthOfColumn = max($columnValues);
+            $maxLengthOfColumn = max($columnLengths);
             
-            if($maxHeader[$i] > $maxLengthOfColumn) 
-            {
+            if($maxHeader[$i] > $maxLengthOfColumn) {
                 $maxColumns[] = $maxHeader[$i];
             } else {
                 $maxColumns[] = $maxLengthOfColumn;
@@ -283,7 +282,8 @@ class PrettyPrinter extends AbstractComponent {
 
     private function getColumnsLength(array $array) : array 
     {
-        return array_values(array_combine($array, array_map('strlen', $array)));     
+        $map_strlen = array_map('strlen', $array);
+        return array_values($map_strlen);
     }
 
     private function getLinesColumnsLength(array $lines) : array 

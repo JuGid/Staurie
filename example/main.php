@@ -25,7 +25,8 @@ $staurie->register([
     Money::class
 ]);
 
-$menu = $staurie->getContainer()->registerComponent(Menu::class);
+//$menu = $staurie->getContainer()->registerComponent(Menu::class);
+/*
 $menu->configuration([
     'text'=> 'Welcome to this awesome test adventure',
     'labels'=> [
@@ -34,7 +35,7 @@ $menu->configuration([
         'continue' => 'Continue from save'
     ]
 ]);
-
+*/
 $map = $staurie->getContainer()->registerComponent(Map::class);
 $map->configuration([
     'directory'=>__DIR__.'/maps',

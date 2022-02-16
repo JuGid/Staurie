@@ -3,7 +3,7 @@
 namespace Jugid\Staurie\Example\Maps;
 
 use Jugid\Staurie\Component\Map\Blueprint;
-use Jugid\Staurie\Game\Position;
+use Jugid\Staurie\Game\Position\Position;
 
 class Map02 extends Blueprint {
 

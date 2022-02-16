@@ -40,6 +40,10 @@ abstract class AbstractConsoleFunction implements Containerable, Describable {
         }
 
         if(!empty($this->possibleArgs)) {
+            if(!isset($args[0])) {
+                return false;
+            }
+            
             return in_array($args[0], $this->possibleArgs);
         }
 
