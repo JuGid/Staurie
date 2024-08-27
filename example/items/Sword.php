@@ -2,9 +2,9 @@
 
 namespace Jugid\Staurie\Example\Items;
 
-use Jugid\Staurie\Game\Item;
+use Jugid\Staurie\Game\Item_Equippable;
 
-class Sword extends Item {
+class Sword extends Item_Equippable {
 
     public function name() : string {
         return 'Sword';
@@ -13,6 +13,10 @@ class Sword extends Item {
     public function description(): string
     {
         return 'A simple sword';
+    }
+
+    public function body_part(): string { 
+        return 'hand';
     }
 
     public function statistics(): array

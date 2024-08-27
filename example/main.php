@@ -9,6 +9,7 @@ use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\Menu\Menu;
 use Jugid\Staurie\Component\Money\Money;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
+use Jugid\Staurie\Component\Race\Race;
 use Jugid\Staurie\Component\Save\Save;
 use Jugid\Staurie\Staurie;
 
@@ -31,7 +32,6 @@ $menu->configuration([
     'labels'=> [
         'new_game' => 'Enter the world',
         'quit'=> 'Exit game',
-        'continue' => 'Continue from save'
     ]
 ]);
 
@@ -40,8 +40,8 @@ $map->configuration([
     'directory'=>__DIR__.'/maps',
     'namespace'=>'Jugid\Staurie\Example\Maps', 
     'navigation'=>true,
-    'map_enable'=>false,
-    'compass_enable'=>false
+    'map_enable'=>true,
+    'compass_enable'=>true
 ]);
 
 $introduction = $staurie->getContainer()->registerComponent(Introduction::class);
