@@ -15,7 +15,7 @@ use Jugid\Staurie\Staurie;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$staurie = new Staurie('My test game');
+$staurie = new Staurie('Example lands');
 $staurie->register([
     Console::class, 
     PrettyPrinter::class, 
@@ -54,5 +54,5 @@ $introduction->configuration([
     'scrolling'=>false
 ]);
 
-$staurie->devmode();
+//$staurie->devmode();
 $staurie->run();

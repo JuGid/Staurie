@@ -2,6 +2,7 @@
 
 namespace Jugid\Staurie\Example\Npcs;
 
+use Jugid\Staurie\Example\Items\Shield;
 use Jugid\Staurie\Game\Npc;
 
 class Cain extends Npc {
@@ -18,7 +19,8 @@ class Cain extends Npc {
         if($this->playerHasItem('Sword')) {
             return ['Please, do not hurt me !', 'I\'m famous here, I can help you !'];
         } else {
-            return 'Speak me i\'m famous';
+            $this->giveItem(new Shield());
+            return 'As you have nothing to hit, I gave you this shield to protect yourself.';
         }
         
     }

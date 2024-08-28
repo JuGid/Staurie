@@ -9,7 +9,7 @@ use LogicException;
 
 class Menu extends AbstractComponent {
 
-    private const MENU_OPTIONS_ORDER = ['new_game', 'continue', 'quit'];
+    private const MENU_OPTIONS_ORDER = ['new_game', 'quit'];
 
     private $menu_options = [];
 
@@ -40,7 +40,7 @@ class Menu extends AbstractComponent {
         return [
             'labels'=> [
                 'new_game'=> 'New game',
-                'continue' => 'Continue',
+                //'continue' => 'Continue',
                 'quit'=>'Quit'
             ],
             'text'=>null
@@ -73,10 +73,10 @@ class Menu extends AbstractComponent {
             case '0':
                 $this->newgame();
                 break;
+            //case '1':
+            //    $this->continue();
+            //    break;
             case '1':
-                $this->continue();
-                break;
-            case '2':
                 $this->container->state()->stop();
                 break;
             default:

@@ -19,7 +19,7 @@ abstract class Npc implements Nameable, Describable, Speakable {
     }
 
     final protected function giveItem(Item $item) {
-        $this->container->dispatcher()->dispatch('inventory.take', ['item'=>$item]);
+        $this->container->dispatcher()->dispatch('inventory.give', ['item'=>$item]);
         $pp = $this->container->getComponent('prettyprinter');
 
         $give_sentence = $this->name() . ' give you the ' . $item->name();

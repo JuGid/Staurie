@@ -19,7 +19,7 @@ class Inventory extends AbstractComponent {
     private int $size;
 
     final public function getEventName() : array {
-        $events = ['inventory.view','inventory.size'];
+        $events = ['inventory.view','inventory.size', 'inventory.give'];
 
         if($this->container->isComponentRegistered(Map::class)) {
             array_push($events, 'inventory.take','inventory.drop');
@@ -47,6 +47,9 @@ class Inventory extends AbstractComponent {
                 break;
             case 'inventory.drop':
                 $this->drop($arguments['item_name']);
+                break;
+            case 'inventory.give':
+                $this->give($arguments['item']);
                 break;
             default:
                 $this->eventToAction($event);
@@ -82,6 +85,13 @@ class Inventory extends AbstractComponent {
         $pp->writeLn('Item dropped', null, 'green');
     }
 
+    private function give(Item $item) {
+        $pp = $this->container->getPrettyPrinter();
+
+        $this->inventory[] = $item;
+        $pp->writeLn($item->name() . ' added to your inventory', null, 'green');
+    }
+
     final protected function view() : void {
         $pp = $this->container->getPrettyPrinter();
         $items = [];
@@ -115,6 +125,10 @@ class Inventory extends AbstractComponent {
             }
         }
         return null;
+    }
+
+    public function addItem(Item $item) : void {
+        $this->inventory[] = $item;
     }
 
     public function removeItem(string $name) : void {

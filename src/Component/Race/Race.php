@@ -3,6 +3,7 @@
 namespace Jugid\Staurie\Component\Race;
 
 use Jugid\Staurie\Component\AbstractComponent;
+use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use LogicException;
 
 class Race extends AbstractComponent {
