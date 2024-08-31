@@ -41,6 +41,9 @@ class Level extends AbstractComponent {
         if($this->level < $this->config['max_level']) {
             $this->level++;
             $this->points += $this->config['point_per_level'];
+            $this->experience = ($this->experience - $this->getExperienceForCurrentLevel());
+            $pp = $this->container->getPrettyPrinter();
+            $pp->writeLn(sprintf('Level up ! You are now level %d. You can use your %d points to up your stats.', $this->level, $this->points));
         }
     }
 
@@ -55,6 +58,12 @@ class Level extends AbstractComponent {
     private function getExperienceForCurrentLevel() : int {
         $formula = preg_replace('/\{level\}/', $this->level, $this->config['formula']);
         return eval('return '.$formula.';');
+    }
+
+    public function verifiy() {
+        if($this->experience >= $this->getExperienceForCurrentLevel()) {
+            $this->up();
+        }
     }
 
     public function defaultConfiguration(): array
