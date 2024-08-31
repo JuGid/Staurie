@@ -8,11 +8,11 @@ use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 
 class Level extends AbstractComponent {
 
-    private $level;
+    public $level;
 
-    private $experience;
+    public $experience;
 
-    private $points;
+    public $points;
 
     public function name() : string {
         return 'level';

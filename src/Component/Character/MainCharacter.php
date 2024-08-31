@@ -6,8 +6,10 @@ use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Character\CoreFunctions\EquipFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\MainCharacterFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\SpeakFunction;
+use Jugid\Staurie\Component\Character\CoreFunctions\StatsFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\UnequipFunction;
 use Jugid\Staurie\Component\Inventory\Inventory;
+use Jugid\Staurie\Component\Level\Level;
 use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Game\Item_Equippable;
@@ -40,6 +42,10 @@ class MainCharacter extends AbstractComponent {
             array_push($events, 'character.unequip');
         }
 
+        if($this->container->isComponentRegistered(Level::class)) {
+            array_push($events, 'character.stats');
+        }
+
         return $events;
     }
 
@@ -60,6 +66,10 @@ class MainCharacter extends AbstractComponent {
             $console->addFunction(new UnequipFunction());
         }
 
+        if($this->container->isComponentRegistered(Level::class)) {
+            $console->addFunction(new StatsFunction());
+        }
+
         $this->statistics = $this->config['statistics'];
         $this->name = $this->config['name'];
         $this->gender = $this->config['gender'];
@@ -78,6 +88,9 @@ class MainCharacter extends AbstractComponent {
                 break;
             case 'character.unequip':
                 $this->unequip($arguments['item'], $arguments['body_part']);
+                break;
+            case 'character.stats':
+                $this->stats($arguments['type'], $arguments['stat']);
                 break;
             default:
                 $this->eventToAction($event);
@@ -201,6 +214,29 @@ class MainCharacter extends AbstractComponent {
 
         $this->equipment[$body_part] = null;
         $pp->writeLn("This $item_name was not worthy !");
+    }
+
+    private function stats(string $type, string $stat) : void {
+        $pp = $this->container->getPrettyPrinter();
+        $level = $this->container->getComponent('level');
+
+        if(!in_array($stat, array_keys($this->statistics->asArray()))) {
+            $pp->writeLn("Stat $stat does not exist.", 'red');
+        }
+
+        switch($type) {
+            case 'add' :
+                if($level->points > 0) {
+                    $this->statistics->add($stat, 1);
+                    $level->points -= 1;
+                    $pp->writeLn("One point added to $stat", 'green');
+                    break;
+                }
+                $pp->writeLn("You don't have enough points", 'red');
+                break;
+            default:
+                $pp->writeLn("You can only use function add", 'red');
+        }
     }
 
     private function printNpcDialog(string $npc_name, string|array $dialog) : void {

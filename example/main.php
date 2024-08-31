@@ -22,11 +22,12 @@ $staurie->register([
     MainCharacter::class, 
     Save::class,
     Inventory::class, 
-    Level::class, 
-    Money::class
+    Level::class
 ]);
 
-$menu = $staurie->getContainer()->registerComponent(Menu::class);
+$container = $staurie->getContainer();
+
+$menu = $container->registerComponent(Menu::class);
 $menu->configuration([
     'text'=> 'Welcome to this awesome test adventure',
     'labels'=> [
@@ -35,7 +36,7 @@ $menu->configuration([
     ]
 ]);
 
-$map = $staurie->getContainer()->registerComponent(Map::class);
+$map = $container->registerComponent(Map::class);
 $map->configuration([
     'directory'=>__DIR__.'/maps',
     'namespace'=>'Jugid\Staurie\Example\Maps', 
@@ -44,7 +45,7 @@ $map->configuration([
     'compass_enable'=>true
 ]);
 
-$introduction = $staurie->getContainer()->registerComponent(Introduction::class);
+$introduction = $container->registerComponent(Introduction::class);
 $introduction->configuration([
     'text'=>[
         'This is an introduction to test the introduction component',
@@ -52,6 +53,12 @@ $introduction->configuration([
     ],
     'title'=>'Chapter 1 : The new game',
     'scrolling'=>false
+]);
+
+$money = $container->registerComponent(Money::class);
+$money->configuration([
+    'name' => 'Coda points',
+    'start_with' => 100
 ]);
 
 //$staurie->devmode();
