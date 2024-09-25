@@ -12,6 +12,7 @@ use Jugid\Staurie\Component\Map\CoreFunctions\MapFunction;
 use Jugid\Staurie\Component\Map\CoreFunctions\ViewFunction;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Game\Item;
+use Jugid\Staurie\Game\Monster;
 use Jugid\Staurie\Game\Npc;
 
 class Map extends AbstractComponent {
@@ -142,6 +143,20 @@ class Map extends AbstractComponent {
 
             $pp->writeLn('There are items to take', 'green');
             $pp->writeTable(['Name', 'Description', 'Statistics'], $items);
+        }
+
+        if(!empty($current_blueprint->getMonsters())) {
+            $monsters = [];
+            foreach($current_blueprint->getMonsters() as $monster) {
+                if(!$monster instanceof Monster) {
+                   continue; 
+                }
+
+                $monsters[] = [$monster->name(), $monster->description(), $monster->level()];
+            }
+    
+            $pp->writeLn('There are monsters to fight with', 'green');
+            $pp->writeTable(['Name', 'Description', 'Level'], $monsters);
         }
     }
 

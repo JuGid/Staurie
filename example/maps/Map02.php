@@ -33,4 +33,8 @@ class Map02 extends Blueprint {
     public function items() : array {
         return [];
     }
+
+    public function monsters() : array {
+        return [];
+    }
 }

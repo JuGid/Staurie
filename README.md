@@ -1,6 +1,6 @@
 # Staurie
 
-Staurie is a PHP Text based game engine to create interactive fiction with the possibility to activate/deactivate components.
+Staurie is a PHP Text based game engine to create interactive fiction with the possibility to activate/deactivate components. This is only for education purpose.
 
 ## Text based games
 
@@ -12,7 +12,9 @@ Staurie is modulable. You can write any story you want, with the fonctionnalitie
 
 ## Documentation
 
-Will appear soon...
+Staurie can helpyou to create a game based on OOP and PHP. This is used to help students to review what they studied before and watch if they know the OOP principles.
+
+This documentation is a step-by-step tutorial to create a simple story. You can also find an example in the "example" folder.
 
 ## Contibuting
 

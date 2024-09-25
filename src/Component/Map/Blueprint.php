@@ -18,24 +18,30 @@ abstract class Blueprint implements Containerable, Initializable, Describable, P
 
     private array $items = [];
 
+    private array $monsters = [];
+
     final public function setContainer(Container $container): void
     {
         $this->container = $container;
     }
 
     final public function initialize() : void {
-        $npcs_class = $this->npcs();
-        $items_class = $this->items();
+        $npcs = $this->npcs();
+        $items = $this->items();
+        $monsters = $this->monsters();
 
-        foreach($npcs_class as $class) {
-            $npc = new $class();
+        foreach($npcs as $npc) {
             $npc->setContainer($this->container);
             $this->npcs[$npc->name()] = $npc;
         }
 
-        foreach($items_class as $class) {
-            $item = new $class();
+        foreach($items as $item) {
             $this->items[$item->name()] = $item;
+        }
+
+        foreach($monsters as $monster) {
+            $monster->setContainer($this->container);
+            $this->monsters[$monster->name()] = $monster;
         }
     }
 
@@ -77,7 +83,12 @@ abstract class Blueprint implements Containerable, Initializable, Describable, P
         return $this->items;
     }
 
+    public function getMonsters() : ?array {
+        return $this->monsters;
+    }
+
     abstract public function npcs() : array;
     abstract public function items() : array;
+    abstract public function monsters() : array;
 
 }

@@ -20,7 +20,6 @@ $staurie->register([
     Console::class, 
     PrettyPrinter::class, 
     MainCharacter::class, 
-    Save::class,
     Inventory::class, 
     Level::class
 ]);

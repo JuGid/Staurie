@@ -6,6 +6,7 @@ use Jugid\Staurie\Component\Map\Blueprint;
 use Jugid\Staurie\Game\Position\Position;
 use Jugid\Staurie\Example\Npcs\Cain;
 use Jugid\Staurie\Example\Items\Sword;
+use Jugid\Staurie\Example\Monsters\Bouftou;
 
 class Map01 extends Blueprint {
 
@@ -34,5 +35,9 @@ class Map01 extends Blueprint {
 
     public function items() : array {
         return [new Sword()];
+    }
+
+    public function monsters() : array {
+        return [new Bouftou()];
     }
 }
