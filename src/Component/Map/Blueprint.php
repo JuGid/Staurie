@@ -14,11 +14,11 @@ abstract class Blueprint implements Containerable, Initializable, Describable, P
 
     private Container $container;
 
-    private array $npcs = [];
+    public array $npcs = [];
 
-    private array $items = [];
+    public array $items = [];
 
-    private array $monsters = [];
+    public array $monsters = [];
 
     final public function setContainer(Container $container): void
     {
