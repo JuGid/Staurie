@@ -6,7 +6,7 @@ use LogicException;
 
 class Statistics {
 
-    private array $statistics = [];
+    public array $statistics = [];
 
     public static function default() {
         $default_stats = new Statistics();

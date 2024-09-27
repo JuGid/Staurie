@@ -18,13 +18,13 @@ use LogicException;
 
 class MainCharacter extends AbstractComponent {
 
-    private Statistics $statistics;
+    public Statistics $statistics;
 
-    private string $name;
+    public string $name;
 
-    private string $gender;
+    public string $gender;
 
-    private array $equipment;
+    public array $equipment;
 
     final public function name() : string {
         return 'character';

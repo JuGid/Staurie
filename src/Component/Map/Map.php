@@ -20,7 +20,7 @@ class Map extends AbstractComponent {
     private const CONTAINER_BLUEPRINT = 'blueprint';
     private const CHAR_PER_LINE = 100;
 
-    private Position $current_position;
+    public Position $current_position;
 
     private MapPrinter $printer;
 

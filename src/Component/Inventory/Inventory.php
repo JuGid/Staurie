@@ -14,9 +14,9 @@ use Jugid\Staurie\Game\Item;
 
 class Inventory extends AbstractComponent {
 
-    private array $inventory = [];
+    public array $inventory = [];
 
-    private int $size;
+    public int $size;
 
     final public function getEventName() : array {
         $events = ['inventory.view','inventory.size', 'inventory.give'];

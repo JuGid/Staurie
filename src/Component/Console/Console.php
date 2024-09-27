@@ -15,7 +15,7 @@ class Console extends AbstractComponent {
         HelpFunction::class
     ];
 
-    private array $functions;
+    public array $functions;
 
     public function __construct()
     {
