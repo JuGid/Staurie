@@ -56,7 +56,7 @@ class MapPrinter implements Printer, Containerable {
             $line = [$y];
             for($x = $min_position->x; $x <= $max_position->x; $x++) {
                 $blueprint = $map->getBlueprint(new Position($x,$y));
-                
+            
                 if(null !== $blueprint) {
                     if($current_player_position->isSame($blueprint->position())) {
                         $line[] = 'P';

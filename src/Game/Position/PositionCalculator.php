@@ -23,12 +23,17 @@ class PositionCalculator {
     }
 
     public function max() : Position {
-        $this->max = $this->getFirstBlueprint()->position();
+        $this->max = clone $this->getFirstBlueprint()->position();
 
         foreach($this->blueprints as $blueprint) {
             $current_position = $blueprint->position();
-            if($this->max->x <= $current_position->x && $this->max->y <= $current_position->y) {
-                $this->max = $current_position;
+
+            if($this->max->x <= $current_position->x) {
+                $this->max->x = $current_position->x;
+            }
+            
+            if($this->max->y <= $current_position->y) {
+                $this->max->y = $current_position->y;
             }
         }
 
@@ -36,7 +41,7 @@ class PositionCalculator {
     }
 
     public function min() : Position {
-        $this->min = $this->getFirstBlueprint()->position();
+        $this->min = clone $this->getFirstBlueprint()->position();
 
         foreach($this->blueprints as $blueprint) {
             $current_position = $blueprint->position();
