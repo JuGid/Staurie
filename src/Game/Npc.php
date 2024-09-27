@@ -8,7 +8,7 @@ use Jugid\Staurie\Interface\Describable;
 use Jugid\Staurie\Interface\Speakable;
 
 abstract class Npc implements Containerable, Describable, Speakable {
-    private Container $container;
+    protected Container $container;
 
     final public function setContainer(Container $container) : void {
         $this->container = $container;

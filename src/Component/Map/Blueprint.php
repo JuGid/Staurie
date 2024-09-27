@@ -12,7 +12,7 @@ use Jugid\Staurie\Interface\Positionnable;
 
 abstract class Blueprint implements Containerable, Initializable, Describable, Positionnable {
 
-    private Container $container;
+    protected Container $container;
 
     public array $npcs = [];
 
