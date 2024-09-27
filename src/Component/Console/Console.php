@@ -76,6 +76,11 @@ class Console extends AbstractComponent {
         $function = $this->getFunction($command, $args);
 
         if(null !== $function) {
+            if(is_int($function->getArgs()) && count($args) !== $function->getArgs()) {
+                echo "This function needs more arguments\n";
+                return;
+            }
+            
             $function->action($args);
         } else {
             echo "Command ". $command . " does not exist\n";
