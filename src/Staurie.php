@@ -18,8 +18,12 @@ class Staurie {
         $this->getContainer()->state()->devmode(true);
     }
 
-    public function run() : void {
+    public function run(callable $post_init_action = null) : void {
         $this->initialize();
+
+        if($post_init_action !== null) {
+            call_user_func($post_init_action, $this->container);
+        }
 
         $this->container->dispatcher()->dispatch('menu.show');
         

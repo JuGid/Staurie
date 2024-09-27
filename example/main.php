@@ -11,6 +11,7 @@ use Jugid\Staurie\Component\Money\Money;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Component\Race\Race;
 use Jugid\Staurie\Component\Save\Save;
+use Jugid\Staurie\Container;
 use Jugid\Staurie\Staurie;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -60,5 +61,4 @@ $money->configuration([
     'start_with' => 100
 ]);
 
-//$staurie->devmode();
 $staurie->run();
