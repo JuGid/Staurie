@@ -99,9 +99,14 @@ class MainCharacter extends AbstractComponent {
     }
 
     final protected function new() {
-        $this->name = readline('Character name : ');
-        $this->gender = readline('Character gender : ');
-
+        if($this->config['ask_name']) {
+            $this->name = readline('Character name : ');
+        }
+        
+        if($this->config['ask_gender']) {
+            $this->gender = readline('Character gender : ');
+        }
+        
         $this->container->dispatcher()->dispatch('race.ask');
         $this->container->dispatcher()->dispatch('tribe.ask');
 
@@ -112,9 +117,15 @@ class MainCharacter extends AbstractComponent {
     final protected function me() {
         $pp = $this->container->getPrettyPrinter();
         $pp->writeUnder('Details', 'green');
-        $pp->writeLn('Name : ' . $this->name);
-        $pp->writeLn('Gender : ' . $this->gender);
 
+        if($this->config['character_has_name']) {
+            $pp->writeLn('Name : ' . $this->name);
+        }
+        
+        if($this->config['character_has_gender']) {
+            $pp->writeLn('Gender : ' . $this->gender);
+        }
+        
         $this->container->dispatcher()->dispatch('race.view');
         $this->container->dispatcher()->dispatch('tribe.view');
         $this->container->dispatcher()->dispatch('level.view');
@@ -272,7 +283,11 @@ class MainCharacter extends AbstractComponent {
                 'shield' => null,
                 'feet' => null,
                 'shoulders' => null,
-            ]
+            ],
+            'ask_name' => true,
+            'ask_gender' => true,
+            'character_has_name' => true,
+            'character_has_gender' => true
         ];
     }
 
