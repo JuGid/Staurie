@@ -180,11 +180,16 @@ class MainCharacter extends AbstractComponent {
             return;
         }
 
+        if($this->equipment[$body_part] !== null) {
+            $this->unequip(($this->equipment[$body_part])->name(), $body_part);
+        }
+
         $this->equipment[$body_part] = clone $item;
 
         foreach($item->statistics() as $type => $value) {
             $this->statistics->add($type, $value);
         }
+
         $inventory->removeItem($item_name);
         $pp->writeLn("Item $item_name is yours !");
     }
