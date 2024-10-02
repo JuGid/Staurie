@@ -300,19 +300,19 @@ class MainCharacter extends AbstractComponent {
                     $monster_health -= abs($player_damages);
                     $player_health -= abs($monster_damages);
 
-                    $pp->writeLn("$monster_name attacks. You loose $monster_damages in the process", 'red');
+                    $pp->writeLn("$monster_name attacks. You loose $monster_damages", 'red');
                     $pp->writeLn("$monster_name looses $player_damages", 'red');
                     break;
                 case '1':
                     $monster_damages = ($player_defense*2) >= $monster->attack() ? 0 : (($player_defense * 2) - $monster->attack());
-                    $player_health -= $monster_damages;
+                    $player_health -= abs($monster_damages);
 
-                    $pp->writeLn("$monster_name attacks. You loose $monster_damages in the process", 'red');
+                    $pp->writeLn("$monster_name attacks. You loose $monster_damages", 'red');
                     break;
                 case '2':
                     $health_diff = $this->statistics->value($fight_config['health'])/2;
                     $this->statistics->sub($fight_config['health'], $health_diff);
-                    $pp->writeLn("You choose to escape, loosing 50% of your health ($health_diff).", 'red');
+                    $pp->writeLn("You choose to escape, loosing 50% of your current health ($health_diff).", 'red');
                     return;
             }
 
