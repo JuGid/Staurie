@@ -177,6 +177,10 @@ class Map extends AbstractComponent {
         $mapPrinter->print();
     }
 
+    public function teleport(Position $position) : void {
+        $this->current_position = $position;
+    }
+
     final public function getCurrentBlueprint() : Blueprint {
         return $this->getBlueprint($this->current_position);
     }

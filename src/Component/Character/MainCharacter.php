@@ -4,6 +4,7 @@ namespace Jugid\Staurie\Component\Character;
 
 use Jugid\Staurie\Component\AbstractComponent;
 use Jugid\Staurie\Component\Character\CoreFunctions\EquipFunction;
+use Jugid\Staurie\Component\Character\CoreFunctions\FightFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\MainCharacterFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\SpeakFunction;
 use Jugid\Staurie\Component\Character\CoreFunctions\StatsFunction;
@@ -14,6 +15,7 @@ use Jugid\Staurie\Component\Map\Map;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use Jugid\Staurie\Game\Item_Equippable;
 use Jugid\Staurie\Game\Npc;
+use Jugid\Staurie\Game\Position\Position;
 use LogicException;
 
 class MainCharacter extends AbstractComponent {
@@ -35,6 +37,7 @@ class MainCharacter extends AbstractComponent {
 
         if($this->container->isComponentRegistered(Map::class)) {
             array_push($events, 'character.speak');
+            array_push($events, 'character.fight');
         }
 
         if($this->container->isComponentRegistered(Inventory::class)) {
@@ -56,9 +59,10 @@ class MainCharacter extends AbstractComponent {
     final public function initialize() : void {
         $console = $this->container->getConsole();
         $console->addFunction(new MainCharacterFunction());
-
+        
         if($this->container->isComponentRegistered(Map::class)) {
             $console->addFunction(new SpeakFunction());
+            $console->addFunction(new FightFunction());
         }
 
         if($this->container->isComponentRegistered(Inventory::class)) {
@@ -91,6 +95,9 @@ class MainCharacter extends AbstractComponent {
                 break;
             case 'character.stats':
                 $this->stats($arguments['type'], $arguments['stat']);
+                break;
+            case 'character.fight':
+                $this->fight($arguments['monster']);
                 break;
             default:
                 $this->eventToAction($event);
@@ -255,6 +262,89 @@ class MainCharacter extends AbstractComponent {
         }
     }
 
+    private function fight(string $monster_name) : void {
+        $pp = $this->container->getPrettyPrinter();
+        $blueprint = $this->container->getMap()->getCurrentBlueprint();
+        $monster = $blueprint->getMonster($monster_name);
+
+        if($monster === null) {
+            $pp->writeLn('This monster is not accessible', 'red');
+            return;
+        }
+
+        $fight_config = $this->config['fight'];
+
+        $player_health = $this->statistics->value($fight_config['health']);
+        $player_defense = $this->statistics->value($fight_config['defense']);
+        $player_attack = $this->statistics->value($fight_config['attack']);
+
+        $monster_health = $monster->health_points();
+
+        $pp->writeLn("Fight starts against $monster_name !", 'green');
+        $round = 1;
+        while($monster_health > 0 && $player_health > 0) {
+            $pp->writeUnder("Round $round starts", "green");
+            $pp->writeLn("[0] Attack");
+            $pp->writeLn("[1] Defend");
+            $pp->writeLn("[2] Escape\n");
+
+            do {
+                $fight_choice = readline('What would you do ? ');
+            } while (!in_array($fight_choice, ['0', '1', '2']));
+
+            switch($fight_choice) {
+                case '0':
+                    $monster_damages = $player_defense >= $monster->attack() ? 0 : ($player_defense - $monster->attack());
+                    $player_damages = $monster->defense() >= $player_attack ? 0 : ($monster->defense() - $player_attack);
+
+                    $monster_health -= abs($player_damages);
+                    $player_health -= abs($monster_damages);
+
+                    $pp->writeLn("$monster_name attacks. You loose $monster_damages in the process", 'red');
+                    $pp->writeLn("$monster_name looses $player_damages", 'red');
+                    break;
+                case '1':
+                    $monster_damages = ($player_defense*2) >= $monster->attack() ? 0 : (($player_defense * 2) - $monster->attack());
+                    $player_health -= $monster_damages;
+
+                    $pp->writeLn("$monster_name attacks. You loose $monster_damages in the process", 'red');
+                    break;
+                case '2':
+                    $health_diff = $this->statistics->value($fight_config['health'])/2;
+                    $this->statistics->sub($fight_config['health'], $health_diff);
+                    $pp->writeLn("You choose to escape, loosing 50% of your health ($health_diff).", 'red');
+                    return;
+            }
+
+            $pp->writeUnder("You : $player_health, $monster_name: $monster_health");
+            $round++;
+        }
+
+        if($monster_health <= 0) {
+            $pp->writeLn("$monster_name is dead. Get ready for the next one !");
+            $blueprint->killMonster($monster_name);
+            $level = $this->container->getComponent('level');
+            $level->experience += $monster->experience();
+            $level->verify();
+        } else if($player_health <= 0) {
+            $pp->writeLn('You are dead. Not ready for that...');
+            $action_at_death = $this->config['action_at_death'];
+            $map = $this->container->getMap();
+
+            match(true) {
+                $action_at_death instanceof Position => $map->teleport($action_at_death),
+                $action_at_death === null => exit('...You loose')
+            };
+        }
+
+        if(!$this->config['health_reset_after_fight']) {
+            $health_diff = $this->statistics->value($fight_config['health']) - $player_health;
+            $this->statistics->sub($fight_config['health'], $health_diff);
+            $pp->writeLn("You loose $health_diff in the fight.", 'red');
+        }
+
+    }
+
     private function printNpcDialog(string $npc_name, string|array $dialog) : void {
         if(is_string($dialog)) {
             $this->printNpcSingleDial($npc_name, $dialog);
@@ -276,7 +366,17 @@ class MainCharacter extends AbstractComponent {
         return [
             'name'=>'Unknown',
             'gender'=>'Unknown',
+            'ask_name' => true,
+            'ask_gender' => true,
+            'character_has_name' => true,
+            'character_has_gender' => true,
             'statistics'=>Statistics::default(),
+            'fight' => [
+                'health' => 'health',
+                'attack' => 'ability',
+                'defense' => 'defense'
+            ],
+            'health_reset_after_fight' => true,
             'equipment' => [
                 'head' => null,
                 'hand' => null,
@@ -284,10 +384,7 @@ class MainCharacter extends AbstractComponent {
                 'feet' => null,
                 'shoulders' => null,
             ],
-            'ask_name' => true,
-            'ask_gender' => true,
-            'character_has_name' => true,
-            'character_has_gender' => true
+            'action_at_death' => null
         ];
     }
 

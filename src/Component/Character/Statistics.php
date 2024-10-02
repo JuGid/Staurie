@@ -10,10 +10,12 @@ class Statistics {
 
     public static function default() {
         $default_stats = new Statistics();
-        return $default_stats->addDefault('chance', 0)
-                             ->addDefault('ability', 0)
-                             ->addDefault('wisdom', 0)
-                             ->addDefault('defense', 0);
+        return $default_stats
+            ->addDefault('health', 100)
+            ->addDefault('chance', 0)
+            ->addDefault('ability', 100)
+            ->addDefault('wisdom', 0)
+            ->addDefault('defense', 5);
     }
 
     public function addDefault(string $name, int $default_value) : self {

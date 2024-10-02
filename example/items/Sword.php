@@ -22,7 +22,7 @@ class Sword extends Item_Equippable {
     public function statistics(): array
     {
         return [
-            'chance'=> 3,
+            'ability'=> 4,
             'wisdom'=> 1
         ];
     }

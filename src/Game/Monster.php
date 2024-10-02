@@ -19,6 +19,7 @@ abstract class Monster implements Containerable, Describable {
     abstract function level() : int;
     abstract function health_points() : int;
     abstract function defense() : int;
+    abstract function attack() : int;
     abstract function experience() : int;
     abstract function skills() : array;
 }

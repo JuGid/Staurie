@@ -19,15 +19,19 @@ class Bouftou extends Monster {
     }
 
     public function health_points(): int { 
-        return 30;
+        return 20;
     }
 
     public function defense(): int { 
         return 2;
     }
 
+    public function attack() : int {
+        return 5;
+    }
+
     public function experience(): int { 
-        return 12;
+        return 11;
     }
 
     public function skills(): array { 

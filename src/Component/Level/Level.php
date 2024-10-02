@@ -60,8 +60,8 @@ class Level extends AbstractComponent {
         return eval('return '.$formula.';');
     }
 
-    public function verifiy() {
-        if($this->experience >= $this->getExperienceForCurrentLevel()) {
+    public function verify() {
+        while($this->experience >= $this->getExperienceForCurrentLevel()) {
             $this->up();
         }
     }

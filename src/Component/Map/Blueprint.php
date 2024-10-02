@@ -4,6 +4,7 @@ namespace Jugid\Staurie\Component\Map;
 
 use Jugid\Staurie\Container;
 use Jugid\Staurie\Game\Item;
+use Jugid\Staurie\Game\Monster;
 use Jugid\Staurie\Game\Npc;
 use Jugid\Staurie\Interface\Containerable;
 use Jugid\Staurie\Interface\Describable;
@@ -85,6 +86,22 @@ abstract class Blueprint implements Containerable, Initializable, Describable, P
 
     public function getMonsters() : ?array {
         return $this->monsters;
+    }
+
+    public function getMonster(string $monster_name) : ?Monster {
+        if(!isset($this->monsters[$monster_name])) {
+            return null;
+        }
+
+        return $this->monsters[$monster_name];
+    }
+
+    public function killMonster(string $monster_name) : void {
+        if(!isset($this->monsters[$monster_name])) {
+            return;
+        }
+
+        unset($this->monsters[$monster_name]);
     }
 
     abstract public function npcs() : array;
