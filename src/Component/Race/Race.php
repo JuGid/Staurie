@@ -3,6 +3,7 @@
 namespace Jugid\Staurie\Component\Race;
 
 use Jugid\Staurie\Component\AbstractComponent;
+use Jugid\Staurie\Component\Character\Statistics;
 use Jugid\Staurie\Component\PrettyPrinter\PrettyPrinter;
 use LogicException;
 
@@ -28,14 +29,23 @@ class Race extends AbstractComponent {
         }
 
         foreach($this->config['races'] as $race) {
-            if(!is_subclass_of($race, 'AbstractRace')) {
+            if(!is_subclass_of($race, AbstractRace::class)) {
                 throw new LogicException('The class ' . $race . ' should be a subclass of AbstractRace');
             }
         }
     }
 
     final protected function action(string $event, array $arguments) : void {
-        $this->eventToAction($event);
+        switch($event) {
+            case 'race.ask':
+                $this->ask();
+                break;
+            case 'race.view':
+                $this->view();
+                break;
+            default:
+                $this->eventToAction($event);
+        }
     }
 
     private function view() {
@@ -46,20 +56,19 @@ class Race extends AbstractComponent {
     private function ask() {
         $pp = $this->container->getPrettyPrinter();
         $print_race = [];
-        foreach($this->config['races'] as $index => $race) {
-            $print_race[] = [$index, $race->name(), $race->description()];
+        foreach($this->config['races'] as $race) {
+            $print_race[] = [$race->name(), $race->description()];
         }
 
         $pp->writeTable(
-            ['Index', 'Name', 'Description'],
+            ['Name', 'Description'],
             $print_race
         );
 
         while($this->chosen_race === null) {
-            $choice = readline('>> ');
+            $choice = readline('Race name >> ');
             if(isset($this->config['races'][$choice])) {
-                $class_race = $this->config['races']['choice'];
-                $this->chosen_race = new $class_race();
+                $this->chosen_race = $this->config['races'][$choice];
                 $pp->writeLn('Race ' . $race->name() . ' chosen', 'green');
             }
         }
@@ -67,7 +76,9 @@ class Race extends AbstractComponent {
 
     final public function defaultConfiguration() : array {
         return [
-            'races'=>[]
+            'races'=>[
+                'Human' => new Human()
+            ]
         ];
     }
 }

@@ -62,7 +62,11 @@ class MainCharacter extends AbstractComponent {
         
         if($this->container->isComponentRegistered(Map::class)) {
             $console->addFunction(new SpeakFunction());
-            $console->addFunction(new FightFunction());
+
+            if($this->config['fight_enable']) {
+                $console->addFunction(new FightFunction());
+            }
+            
         }
 
         if($this->container->isComponentRegistered(Inventory::class)) {
@@ -371,6 +375,7 @@ class MainCharacter extends AbstractComponent {
             'character_has_name' => true,
             'character_has_gender' => true,
             'statistics'=>Statistics::default(),
+            'fight_enable' => true,
             'fight' => [
                 'health' => 'health',
                 'attack' => 'ability',
